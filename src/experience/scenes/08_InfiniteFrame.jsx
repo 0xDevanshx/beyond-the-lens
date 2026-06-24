@@ -21,12 +21,12 @@ export function Scene08() {
       }
     )
 
-    // Text dissolves as camera consumes viewport (second half of scroll)
+    // Text dissolves as camera consumes viewport — triggers in the second half of scene scroll
     gsap.to(contentRef.current, {
       opacity: 0,
       scale: 0.95,
       ease: 'power2.in',
-      scrollTrigger: { trigger: '.scene-08', start: '40% top', end: 'bottom bottom', scrub: true }
+      scrollTrigger: { trigger: '.scene-08', start: 'center top', end: 'bottom center', scrub: true }
     })
   })
 

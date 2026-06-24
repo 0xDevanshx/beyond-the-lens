@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
-import gsap from 'gsap'
+import React, { useEffect, useState } from 'react'
 import { useLenis } from 'lenis/react'
 
 const CHAPTERS = [

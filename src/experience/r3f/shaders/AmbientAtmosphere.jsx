@@ -51,8 +51,8 @@ const fragmentShader = `
     
     float f = noise(st + r);
     
-    // Base color tinted by uHue (HSL: low saturation, very dark)
-    vec3 tint = hsl2rgb(uHue, 0.25, 0.06 + f * 0.04);
+    // Base color tinted by uHue (HSL: visible saturation, dark but readable)
+    vec3 tint = hsl2rgb(uHue, 0.40, 0.09 + f * 0.05);
     
     float mouseDist = distance(st, uMouse);
     float interaction = smoothstep(0.5, 0.0, mouseDist) * 0.04;

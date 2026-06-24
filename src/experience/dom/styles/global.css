@@ -94,7 +94,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid rgba(255,255,255,0.5);
   background: transparent;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: background 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
   position: relative;
 }
 .chapter-nav__dot::before {
