@@ -4,7 +4,6 @@ import { MasterTimeline } from './motion/MasterTimeline'
 import { StoryCanvas } from './r3f/StoryCanvas'
 import { NarrativeTrack } from './dom/NarrativeTrack'
 import { CONFIG } from './config'
-import { ApertureCursor } from '../components/ui/ApertureCursor'
 import { ChapterNav } from '../components/ui/ChapterNav'
 import { Preloader } from '../components/ui/Preloader'
 import './dom/styles/global.css'
@@ -16,9 +15,6 @@ export function Experience() {
     <>
       {/* Preloader — dismisses with upward wipe */}
       <Preloader onComplete={() => setPreloaderDone(true)} />
-
-      {/* Custom aperture cursor */}
-      <ApertureCursor />
 
       <Locomotion>
         <MasterTimeline>
