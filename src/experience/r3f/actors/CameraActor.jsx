@@ -16,9 +16,21 @@ export function CameraActor({ id, url }) {
   const mouseTarget = useRef(new THREE.Vector2(0, 0))
 
   useEffect(() => {
-    // Preload the specific model immediately
-    useGLTF.preload(url)
-  }, [url])
+    // F9: GLTF transparency sort fix — traverse meshes, fix transparent depthWrite and assign renderOrder
+    if (scene) {
+      scene.traverse(child => {
+        if (child.isMesh && child.material) {
+          if (child.material.transparent) {
+            child.material.depthWrite = false
+            child.renderOrder = 1 // Draw after particles (0) and atmosphere (-1)
+          } else {
+            child.material.depthWrite = true
+            child.renderOrder = 1
+          }
+        }
+      })
+    }
+  }, [scene])
 
   useFrame((state) => {
     if (!groupRef.current) return
@@ -71,13 +83,13 @@ export function CameraActor({ id, url }) {
       })
       // Scene 03: Optical Dissolve fade out
       gsap.to(groupRef.current.scale, {
-        x: 0, y: 0, z: 0,
+        x: 0.001, y: 0.001, z: 0.001, // F2: Avoid scale 0 bounding sphere collapse
         ease: 'power2.in',
         scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'center center', scrub: true }
       })
     } 
     else if (id === 'vintage') {
-      gsap.set(groupRef.current.scale, { x: 0, y: 0, z: 0 })
+      gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
       gsap.set(groupRef.current.position, { x: 5, y: 0, z: -2 })
       
       // Gather meshes for explosion
@@ -110,8 +122,7 @@ export function CameraActor({ id, url }) {
         scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
       })
       gsap.to(groupRef.current.rotation, {
-        y: Math.PI * 2,
-        x: Math.PI / 4,
+        y: Math.PI * 1.5, // F8: 270 sweep, removed x rotation to prevent gimbal lock
         ease: 'none',
         scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
       })
@@ -142,20 +153,20 @@ export function CameraActor({ id, url }) {
       meshes.forEach(mesh => {
         const burstDir = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(15)
         
-        // Sudden burst
+        // F3: Function-based targets to evaluate at trigger time, not mount time
         burstTl.to(mesh.position, {
-          x: mesh.position.x + burstDir.x,
-          y: mesh.position.y + burstDir.y,
-          z: mesh.position.z + burstDir.z,
+          x: () => mesh.userData.origPos.x + burstDir.x,
+          y: () => mesh.userData.origPos.y + burstDir.y,
+          z: () => mesh.userData.origPos.z + burstDir.z,
           duration: 0.2,
           ease: 'power4.out'
         }, 0)
         
         // Slow motion drift
         burstTl.to(mesh.position, {
-          x: mesh.position.x + burstDir.x * 1.5,
-          y: mesh.position.y + burstDir.y * 1.5,
-          z: mesh.position.z + burstDir.z * 1.5,
+          x: () => mesh.userData.origPos.x + burstDir.x * 1.5,
+          y: () => mesh.userData.origPos.y + burstDir.y * 1.5,
+          z: () => mesh.userData.origPos.z + burstDir.z * 1.5,
           duration: 10,
           ease: 'none'
         }, 0.2)
@@ -163,13 +174,13 @@ export function CameraActor({ id, url }) {
 
       // Fade out for Scene 06
       gsap.to(groupRef.current.scale, {
-        x: 0, y: 0, z: 0,
+        x: 0.001, y: 0.001, z: 0.001, // F2: Avoid scale 0
         ease: 'power2.in',
         scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
       })
     } 
     else if (id === 'modern') {
-      gsap.set(groupRef.current.scale, { x: 0, y: 0, z: 0 })
+      gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
       // Clean vertical entrance — no z-fight from diagonal rise
       gsap.set(groupRef.current.position, { y: -3, z: 0 })
       
@@ -198,7 +209,7 @@ export function CameraActor({ id, url }) {
       })
       // Scene 08: Infinite Frame (scales up massively)
       gsap.to(groupRef.current.scale, {
-        x: 100, y: 100, z: 100,
+        x: 30, y: 30, z: 30, // F5: Max scale 30 instead of 100 to save depth precision
         ease: 'power4.in',
         scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
       })
@@ -206,7 +217,7 @@ export function CameraActor({ id, url }) {
   }, { dependencies: [id] })
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} frustumCulled={false}>
       <Center>
         <primitive object={scene} />
       </Center>

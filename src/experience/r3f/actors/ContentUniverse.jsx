@@ -90,10 +90,10 @@ export function ContentUniverse() {
   })
 
   return (
-    <group ref={groupRef}>
-      <instancedMesh ref={meshRef} args={[null, null, COUNT]}>
+    <group ref={groupRef} frustumCulled={false}>
+      <instancedMesh ref={meshRef} args={[null, null, COUNT]} renderOrder={2}>
         <planeGeometry args={[1.5, 1]} />
-        <meshBasicMaterial side={THREE.DoubleSide} transparent={true} opacity={0.8} depthWrite={false} alphaTest={0.01} />
+        <meshBasicMaterial side={THREE.DoubleSide} transparent={false} opacity={1} depthWrite={true} alphaTest={0.5} />
       </instancedMesh>
     </group>
   )

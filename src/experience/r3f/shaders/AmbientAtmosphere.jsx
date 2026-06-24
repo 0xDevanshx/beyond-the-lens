@@ -118,8 +118,8 @@ export function AmbientAtmosphere() {
   })
 
   return (
-    <mesh position={[0, 0, -10]}>
-      <planeGeometry args={[viewport.width * 2, viewport.height * 2]} />
+    <mesh position={[0, 0, 0]} frustumCulled={false} renderOrder={-1}>
+      <planeGeometry args={[2, 2]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}
@@ -131,6 +131,7 @@ export function AmbientAtmosphere() {
           uHue: { value: 40 },
           uMouse: { value: new THREE.Vector2(0.5, 0.5) }
         }}
+        depthTest={false}
         depthWrite={false}
       />
     </mesh>

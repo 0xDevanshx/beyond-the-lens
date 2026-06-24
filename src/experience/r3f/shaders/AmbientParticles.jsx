@@ -99,7 +99,7 @@ export function AmbientParticles() {
   })
 
   return (
-    <instancedMesh ref={meshRef} args={[null, null, COUNT]}>
+    <instancedMesh ref={meshRef} args={[null, null, COUNT]} renderOrder={0}>
       {/* Sphere geometry — no visible square edges at close range */}
       <sphereGeometry args={[0.03, 5, 5]} />
       <meshBasicMaterial color="#ffffff" transparent opacity={0.6} depthWrite={false} />

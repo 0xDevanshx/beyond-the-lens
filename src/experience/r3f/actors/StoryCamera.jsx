@@ -48,6 +48,6 @@ export function StoryCamera() {
   })
 
   return (
-    <PerspectiveCamera makeDefault ref={cameraRef} fov={45} near={0.1} far={1000} />
+    <PerspectiveCamera makeDefault ref={cameraRef} fov={45} near={0.5} far={500} />
   )
 }
