@@ -85,7 +85,7 @@ export function CameraActor({ id, url }) {
       
       // Scene 03: Fades in during optical dissolve
       gsap.to(groupRef.current.scale, {
-        x: 1, y: 1, z: 1,
+        x: 3, y: 3, z: 3,
         ease: 'power2.out',
         scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'center center', scrub: true }
       })
