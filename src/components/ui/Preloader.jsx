@@ -9,13 +9,13 @@ export function Preloader({ onComplete }) {
     const timer = setTimeout(() => {
       gsap.to(ref.current, {
         yPercent: -100,
-        duration: 1.0,
+        duration: 1.2,
         ease: 'power4.inOut',
         onComplete: () => {
           if (onComplete) onComplete()
         }
       })
-    }, 2200)
+    }, 3000)
     return () => clearTimeout(timer)
   }, [onComplete])
 

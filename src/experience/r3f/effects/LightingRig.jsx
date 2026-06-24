@@ -42,6 +42,13 @@ export function LightingRig() {
       scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
     })
 
+    // Scene 07: Reduce ambient for dramatic depth (1.5 → 0.8)
+    gsap.to(ambientRef.current, {
+      intensity: 0.8,
+      ease: 'power2.inOut',
+      scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
+    })
+
     // Scene 08: Fade to black
     gsap.to([ambientRef.current, directionalRef.current, pointRef.current], {
       intensity: 0,

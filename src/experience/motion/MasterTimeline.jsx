@@ -36,8 +36,8 @@ export function MasterTimeline({ children }) {
         trigger: scene,
         start: 'top 50%',
         end: 'bottom 50%',
-        onEnter: () => gsap.to(document.documentElement, { '--sc-bg': bg, '--sc-fg': fg, duration: 1, ease: 'power2.inOut' }),
-        onEnterBack: () => gsap.to(document.documentElement, { '--sc-bg': bg, '--sc-fg': fg, duration: 1, ease: 'power2.inOut' })
+        onEnter: () => gsap.to(document.documentElement, { '--sc-bg': bg, '--sc-fg': fg, duration: 1.8, ease: 'power3.inOut' }),
+        onEnterBack: () => gsap.to(document.documentElement, { '--sc-bg': bg, '--sc-fg': fg, duration: 1.8, ease: 'power3.inOut' })
       })
       // Pinning logic for specific scenes
       if (scene.classList.contains('scene-03') || 

@@ -16,21 +16,21 @@ export function Scene08() {
       opacity: 0,
       scale: 0.95,
       ease: 'power2.in',
-      scrollTrigger: { trigger: '.scene-08', start: 'center top', end: 'bottom center', scrub: true }
+      scrollTrigger: { trigger: '.scene-08', start: '55% top', end: 'bottom center', scrub: true }
     })
 
     // Identity + CTA fades IN as headline fades out — the payoff
     gsap.fromTo(identityRef.current,
-      { opacity: 0, y: 30 },
+      { opacity: 0, y: 24 },
       {
         opacity: 1,
         y: 0,
-        duration: 1.2,
+        duration: 1.4,
         ease: 'power3.out',
         scrollTrigger: {
           trigger: '.scene-08',
-          start: '60% top',
-          toggleActions: 'play none none reverse'
+          start: '70% top',
+          toggleActions: 'play none none none'
         }
       }
     )

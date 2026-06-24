@@ -86,16 +86,17 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  mix-blend-mode: difference;
+  /* Removed mix-blend-mode: difference — invisible on copper/mid-tone scenes */
 }
 .chapter-nav__dot {
   width: 6px; height: 6px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.45);
   background: transparent;
   cursor: pointer;
-  transition: background 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+  transition: background 0.4s ease, transform 0.35s ease, border-color 0.4s ease, opacity 0.3s ease;
   position: relative;
+  pointer-events: all;
 }
 .chapter-nav__dot::before {
   content: attr(data-label);
@@ -108,13 +109,13 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   opacity: 0;
   white-space: nowrap;
-  color: white;
+  color: rgba(255,255,255,0.8);
   transition: opacity 0.3s ease;
 }
 .chapter-nav__dot:hover::before { opacity: 0.7; }
 .chapter-nav__dot.active {
-  background: white;
-  border-color: white;
+  background: rgba(255,255,255,0.9);
+  border-color: rgba(255,255,255,0.9);
   transform: scale(1.5);
 }
 
@@ -263,8 +264,9 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  /* Fade out after 3s so it doesn’t persist past first scroll interaction */
+  animation: indicator-float 2.5s ease-in-out 3 forwards, indicator-fade 0.6s ease-out 7s forwards;
   opacity: 0.4;
-  animation: indicator-float 2.5s ease-in-out infinite;
   pointer-events: none;
 }
 .scroll-indicator__arrow {
@@ -274,6 +276,9 @@ h1, h2, h3, h4, h5, h6 {
 @keyframes indicator-float {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(8px); }
+}
+@keyframes indicator-fade {
+  to { opacity: 0; visibility: hidden; }
 }
 
 /* ─────────────────────────────────────────

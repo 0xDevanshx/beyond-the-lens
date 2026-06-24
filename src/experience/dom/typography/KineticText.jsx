@@ -29,14 +29,14 @@ export function KineticText({ children, tag = 'div', className = '', delay = 0, 
       opacity: 1,
       filter: 'blur(0px)',
       scale: 1,
-      duration: 1.5,
+      duration: 1.4,
       stagger: stagger,
-      ease: EASINGS.cinematicSilk,
+      ease: EASINGS.cinematicSmooth,
       delay: delay,
       scrollTrigger: scrollTriggerTarget ? {
         trigger: scrollTriggerTarget,
         start: 'top 75%',
-        toggleActions: 'play reverse play reverse'
+        toggleActions: 'play none none none'  // Stay visible on reverse scroll
       } : undefined
     })
 
