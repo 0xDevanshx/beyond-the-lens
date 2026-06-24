@@ -6,6 +6,7 @@ import { CameraActor } from './actors/CameraActor'
 import { ContentUniverse } from './actors/ContentUniverse'
 import { StoryCamera } from './actors/StoryCamera'
 import { LightingRig } from './effects/LightingRig'
+import { Environment } from '@react-three/drei'
 
 export function StoryCanvas() {
   return (
@@ -19,6 +20,7 @@ export function StoryCanvas() {
         
         <AmbientAtmosphere />
         <AmbientParticles />
+        <Environment preset="studio" />
         
         {/* Load models */}
         <CameraActor id="ancient" url="/1.glb" />

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, Center } from '@react-three/drei'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
@@ -54,12 +54,12 @@ export function CameraActor({ id, url }) {
     // we can use `.scene-0X` as triggers.
     
     if (id === 'ancient') {
-      // Scene 02: Emerges from fog
-      gsap.set(groupRef.current.position, { y: -2, z: -5 })
-      gsap.set(groupRef.current.scale, { x: 1, y: 1, z: 1 })
+      // Scene 02: Emerges from fog on the left side
+      gsap.set(groupRef.current.position, { x: -3, y: -2, z: -5 })
+      gsap.set(groupRef.current.scale, { x: 0.6, y: 0.6, z: 0.6 })
       
       gsap.to(groupRef.current.position, {
-        y: 0, z: 0,
+        x: -1.5, y: -0.5, z: 1,
         ease: 'none',
         scrollTrigger: { trigger: '.scene-02', start: 'top bottom', end: 'bottom top', scrub: true }
       })
@@ -186,7 +186,9 @@ export function CameraActor({ id, url }) {
 
   return (
     <group ref={groupRef}>
-      <primitive object={scene} />
+      <Center>
+        <primitive object={scene} />
+      </Center>
     </group>
   )
 }
