@@ -67,8 +67,8 @@ export function BackgroundShader() {
       scroll.current = window.scrollY / (document.body.scrollHeight - window.innerHeight)
     }
     
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('scroll', handleScroll)

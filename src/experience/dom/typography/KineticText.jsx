@@ -21,7 +21,8 @@ export function KineticText({ children, tag = 'div', className = '', delay = 0, 
       opacity: 0, 
       filter: 'blur(8px)', 
       scale: 1.1,
-      transformOrigin: 'center center'
+      transformOrigin: 'center center',
+      willChange: 'transform, opacity, filter'
     })
 
     const anim = gsap.to(split.chars, {

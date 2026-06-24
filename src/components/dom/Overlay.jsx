@@ -22,6 +22,8 @@ export function Overlay() {
       const fgColor = chapter.dataset.fg
       
       // Color transition
+      gsap.set([heading, text], { willChange: 'transform, opacity' })
+      
       ScrollTrigger.create({
         trigger: chapter,
         start: 'top 50%',

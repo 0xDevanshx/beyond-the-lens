@@ -70,36 +70,37 @@ export function AmbientParticles() {
 
   useFrame(() => {
     if (!meshRef.current) return
+    const s = params.current.speed
+    const b = params.current.burstScale > 1 ? params.current.burstScale : 1
+    
+    const instanceArray = meshRef.current.instanceMatrix.array
+
     for (let i = 0; i < COUNT; i++) {
-      meshRef.current.getMatrixAt(i, dummy.matrix)
-      dummy.matrix.decompose(dummy.position, dummy.quaternion, dummy.scale)
-
-      // Apply velocity
-      const s = params.current.speed
-      const b = params.current.burstScale > 1 ? params.current.burstScale : 1
-
-      dummy.position.x += particleData[i * 4] * s * b
-      dummy.position.y += particleData[i * 4 + 1] * s * b
-      dummy.position.z += particleData[i * 4 + 2] * s * b
+      const offset = i * 16
+      
+      let x = instanceArray[offset + 12] + particleData[i * 4] * s * b
+      let y = instanceArray[offset + 13] + particleData[i * 4 + 1] * s * b
+      let z = instanceArray[offset + 14] + particleData[i * 4 + 2] * s * b
 
       // Wrap around
-      if (dummy.position.x > 10) dummy.position.x = -10
-      if (dummy.position.x < -10) dummy.position.x = 10
-      if (dummy.position.y > 10) dummy.position.y = -10
-      if (dummy.position.y < -10) dummy.position.y = 10
-      if (dummy.position.z > 10) dummy.position.z = -10
-      if (dummy.position.z < -10) dummy.position.z = 10
+      if (x > 10) x = -10
+      if (x < -10) x = 10
+      if (y > 10) y = -10
+      if (y < -10) y = 10
+      if (z > 10) z = -10
+      if (z < -10) z = 10
 
-      dummy.updateMatrix()
-      meshRef.current.setMatrixAt(i, dummy.matrix)
+      instanceArray[offset + 12] = x
+      instanceArray[offset + 13] = y
+      instanceArray[offset + 14] = z
     }
     meshRef.current.instanceMatrix.needsUpdate = true
   })
 
   return (
     <instancedMesh ref={meshRef} args={[null, null, COUNT]}>
-      <sphereGeometry args={[1, 8, 8]} />
-      <meshBasicMaterial color="#ffffff" transparent opacity={0.5} />
+      <planeGeometry args={[0.5, 0.5]} />
+      <meshBasicMaterial color="#ffffff" transparent opacity={0.5} depthWrite={false} />
     </instancedMesh>
   )
 }

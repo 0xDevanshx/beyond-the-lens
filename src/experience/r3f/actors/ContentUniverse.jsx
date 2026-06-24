@@ -91,7 +91,7 @@ export function ContentUniverse() {
     <group ref={groupRef}>
       <instancedMesh ref={meshRef} args={[null, null, COUNT]}>
         <planeGeometry args={[1.5, 1]} />
-        <meshBasicMaterial side={THREE.DoubleSide} transparent={true} opacity={0.8} />
+        <meshBasicMaterial side={THREE.DoubleSide} transparent={true} opacity={0.8} depthWrite={false} alphaTest={0.01} />
       </instancedMesh>
     </group>
   )
