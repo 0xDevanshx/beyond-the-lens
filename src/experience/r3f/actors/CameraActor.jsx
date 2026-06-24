@@ -173,12 +173,12 @@ export function CameraActor({ id, url }) {
       
       // Scene 06: Modern Vision
       gsap.to(groupRef.current.scale, {
-        x: 1, y: 1, z: 1,
+        x: 3, y: 3, z: 3,
         ease: 'power2.out',
         scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
       })
       gsap.to(groupRef.current.position, {
-        y: 0, z: 2,
+        x: 3, y: 0, z: 2,
         ease: 'power2.out',
         scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom top', scrub: true }
       })
