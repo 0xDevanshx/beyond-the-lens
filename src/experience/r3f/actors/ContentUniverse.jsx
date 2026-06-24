@@ -41,9 +41,11 @@ export function ContentUniverse() {
       dummy.scale.set(s, s, s)
       dummy.updateMatrix()
       meshRef.current.setMatrixAt(i, dummy.matrix)
-      
-      // We can also set colors per instance!
-      const color = new THREE.Color().setHSL(i / COUNT, 0.5, 0.5)
+
+      // Monochrome — white at varying opacity (0.15 to 0.55)
+      // No rainbow. Subtle depth variation only.
+      const brightness = 0.15 + (i / COUNT) * 0.40
+      const color = new THREE.Color(brightness, brightness, brightness)
       meshRef.current.setColorAt(i, color)
     })
     meshRef.current.instanceMatrix.needsUpdate = true

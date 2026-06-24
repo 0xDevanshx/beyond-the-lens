@@ -4,8 +4,13 @@ import { KineticText } from '../dom/typography/KineticText'
 export function Scene01() {
   return (
     <section className="scene scene-01" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+
+      {/* Identity signal — top right, understated */}
+      <div className="scene-01-identity" aria-label="Creator identity">
+        Visual Storyteller — Portfolio
+      </div>
+
       <div className="scene-content center" style={{ marginTop: '-5vh' }}>
-        {/* KineticText blur-in at 12vw — proven, beautiful, consistent with system */}
         <KineticText
           tag="h1"
           scrollTriggerTarget=".scene-01"

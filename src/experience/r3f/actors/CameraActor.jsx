@@ -63,8 +63,9 @@ export function CameraActor({ id, url }) {
         ease: 'none',
         scrollTrigger: { trigger: '.scene-02', start: 'top bottom', end: 'bottom top', scrub: true }
       })
+      // Scene 02: Ancient camera — 90° turn, not full 360° (felt mechanical)
       gsap.to(groupRef.current.rotation, {
-        y: Math.PI * 2,
+        y: Math.PI * 0.5,
         ease: 'none',
         scrollTrigger: { trigger: '.scene-02', start: 'top bottom', end: 'bottom top', scrub: true }
       })
@@ -83,9 +84,9 @@ export function CameraActor({ id, url }) {
       const meshes = []
       scene.traverse(child => { if (child.isMesh) meshes.push(child) })
       
-      // Scene 03: Fades in during optical dissolve
+      // Scene 03: Vintage camera fades in — scale 1.8x gives 'Practice.' room to breathe
       gsap.to(groupRef.current.scale, {
-        x: 3, y: 3, z: 3,
+        x: 1.8, y: 1.8, z: 1.8,
         ease: 'power2.out',
         scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'center center', scrub: true }
       })
@@ -169,7 +170,8 @@ export function CameraActor({ id, url }) {
     } 
     else if (id === 'modern') {
       gsap.set(groupRef.current.scale, { x: 0, y: 0, z: 0 })
-      gsap.set(groupRef.current.position, { y: -10, z: -10 })
+      // Clean vertical entrance — no z-fight from diagonal rise
+      gsap.set(groupRef.current.position, { y: -3, z: 0 })
       
       // Scene 06: Modern Vision
       gsap.to(groupRef.current.scale, {

@@ -35,9 +35,9 @@ export function StoryCamera() {
       scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
     })
 
-    // Scene 06: Pull-out for Modern Camera Hero Shot
+    // Scene 06: Push slightly IN for Modern Camera Hero Shot (not a retreat)
     gsap.to(cameraRef.current.position, {
-      x: 0, z: 12,
+      x: 0, z: 4,
       ease: 'power3.out',
       scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
     })

@@ -4,7 +4,7 @@ import { KineticText } from '../dom/typography/KineticText'
 export function Scene02() {
   return (
     <section className="scene scene-02" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', paddingBottom: '18vh' }}>
-      {/* Discovery copy — bottom-left anchored, intimate scale */}
+      {/* Discovery copy — increased size so it reads at distance */}
       <div style={{ position: 'absolute', bottom: '15vh', left: '10vw', maxWidth: '45vw' }}>
         <KineticText
           tag="p"

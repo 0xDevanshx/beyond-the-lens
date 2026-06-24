@@ -163,9 +163,9 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.04em;
 }
 
-/* Scene 02: Discovery — medium, intimate */
+/* Scene 02: Discovery — larger, actually readable */
 .scene-02 .scene-discovery-copy {
-  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
   font-style: italic;
   opacity: 0.75;
   line-height: 1.3;
@@ -288,10 +288,90 @@ h1, h2, h3, h4, h5, h6 {
 .scene-07 { top: 800vh; height: 125vh; }
 .scene-08 { top: 925vh; height: 75vh; }
 
+/* ─────────────────────────────────────────
+   SCENE 08 — Identity + CTA
+───────────────────────────────────────── */
+.scene-08-identity {
+  position: absolute;
+  bottom: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  pointer-events: all;
+}
+.identity-name {
+  font-family: var(--font-sans);
+  font-size: clamp(0.7rem, 1vw, 0.9rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  font-weight: 300;
+}
+.identity-tagline {
+  font-family: var(--font-sans);
+  font-size: clamp(0.65rem, 0.9vw, 0.8rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  font-weight: 300;
+}
+.identity-cta {
+  margin-top: 0.5rem;
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: clamp(0.75rem, 1vw, 0.95rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  padding-bottom: 0.25rem;
+  opacity: 0.85;
+  transition: opacity 0.3s ease, border-color 0.3s ease;
+  pointer-events: all;
+}
+.identity-cta:hover {
+  opacity: 1;
+  border-color: rgba(255,255,255,0.9);
+}
+
+/* ─────────────────────────────────────────
+   SCENE 01 — Identity Signal
+───────────────────────────────────────── */
+.scene-01-identity {
+  position: absolute;
+  top: 3.5rem;
+  right: 10vw;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  font-weight: 300;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   SCROLL PROGRESS INDICATOR
+───────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 2px;
+  height: 0%;
+  background: rgba(255,255,255,0.6);
+  z-index: 200;
+  pointer-events: none;
+  transition: height 0.1s linear;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
 }
-

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Locomotion } from './motion/Locomotion'
 import { MasterTimeline } from './motion/MasterTimeline'
 import { StoryCanvas } from './r3f/StoryCanvas'
@@ -10,11 +10,25 @@ import './dom/styles/global.css'
 
 export function Experience() {
   const [preloaderDone, setPreloaderDone] = useState(false)
+  const progressRef = useRef()
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (!progressRef.current) return
+      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
+      progressRef.current.style.height = `${Math.min(pct, 100)}%`
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
     <>
       {/* Preloader — dismisses with upward wipe */}
       <Preloader onComplete={() => setPreloaderDone(true)} />
+
+      {/* Scroll progress — 2px right edge bar */}
+      <div ref={progressRef} className="scroll-progress" aria-hidden="true" />
 
       <Locomotion>
         <MasterTimeline>

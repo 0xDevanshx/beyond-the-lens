@@ -31,8 +31,8 @@ export function AmbientParticles() {
         (Math.random() - 0.5) * 20,
         (Math.random() - 0.5) * 20
       )
-      const scale = Math.random() * 0.05
-      dummy.scale.set(scale, scale, scale)
+      // Uniform small scale — spheres don’t need random sizing
+      dummy.scale.setScalar(0.03 + Math.random() * 0.03)
       dummy.updateMatrix()
       meshRef.current.setMatrixAt(i, dummy.matrix)
     }
@@ -40,11 +40,12 @@ export function AmbientParticles() {
   }, [dummy])
 
   useGSAP(() => {
-    // Scene 05: Burst
+    // Scene 05: Burst — delayed 0.5s so headline is read before particles fire
     gsap.to(params.current, {
       burstScale: 10,
       duration: 0.2,
       ease: 'power4.out',
+      delay: 0.5,
       scrollTrigger: { trigger: '.scene-05', start: 'top center', toggleActions: 'play reverse play reverse' }
     })
     gsap.to(params.current, {
@@ -99,8 +100,9 @@ export function AmbientParticles() {
 
   return (
     <instancedMesh ref={meshRef} args={[null, null, COUNT]}>
-      <planeGeometry args={[0.5, 0.5]} />
-      <meshBasicMaterial color="#ffffff" transparent opacity={0.5} depthWrite={false} />
+      {/* Sphere geometry — no visible square edges at close range */}
+      <sphereGeometry args={[0.03, 5, 5]} />
+      <meshBasicMaterial color="#ffffff" transparent opacity={0.6} depthWrite={false} />
     </instancedMesh>
   )
 }

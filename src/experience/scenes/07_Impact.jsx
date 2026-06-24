@@ -11,6 +11,15 @@ export function Scene07() {
         <KineticText tag="p" scrollTriggerTarget=".scene-07" delay={0.4}>
           Every frame a conversation.<br />Every post a legacy.
         </KineticText>
+        {/* Concrete number — gives abstract 'impact' a real dimension */}
+        <KineticText
+          tag="p"
+          scrollTriggerTarget=".scene-07"
+          delay={0.7}
+          style={{ marginTop: '2rem', opacity: 0.4, fontSize: 'clamp(0.7rem, 0.9vw, 0.85rem)', letterSpacing: '0.2em', textTransform: 'uppercase' }}
+        >
+          Across platforms · Across communities
+        </KineticText>
       </div>
     </section>
   )
