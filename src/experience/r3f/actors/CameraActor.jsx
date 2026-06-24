@@ -187,6 +187,13 @@ export function CameraActor({ id, url }) {
         ease: 'none',
         scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom top', scrub: true }
       })
+      
+      // Scene 07: Move to left to clear space for text
+      gsap.to(groupRef.current.position, {
+        x: -4,
+        ease: 'power2.inOut',
+        scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
+      })
       // Scene 08: Infinite Frame (scales up massively)
       gsap.to(groupRef.current.scale, {
         x: 100, y: 100, z: 100,
