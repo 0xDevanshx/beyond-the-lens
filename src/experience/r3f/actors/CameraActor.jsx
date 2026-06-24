@@ -96,6 +96,18 @@ export function CameraActor({ id, url }) {
       })
       
       // Scene 04: Frame Factory Orbit + Exploded View
+      gsap.to(groupRef.current.position, {
+        x: -1,
+        y: 0,
+        z: -1,
+        ease: 'power2.inOut',
+        scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
+      })
+      gsap.to(groupRef.current.scale, {
+        x: 1.5, y: 1.5, z: 1.5, // Scale down to make room for the explosion
+        ease: 'power2.inOut',
+        scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
+      })
       gsap.to(groupRef.current.rotation, {
         y: Math.PI * 2,
         x: Math.PI / 4,
@@ -105,7 +117,7 @@ export function CameraActor({ id, url }) {
       
       meshes.forEach(mesh => {
         if (!mesh.userData.origPos) mesh.userData.origPos = mesh.position.clone()
-        const dir = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(1.5)
+        const dir = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(3.0) // Increase explosion radius
         
         // Exploded view
         gsap.to(mesh.position, {
