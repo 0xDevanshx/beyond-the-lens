@@ -22,7 +22,7 @@ export function Scene08() {
   })
 
   return (
-    <section className="scene scene-08">
+    <section className="scene scene-08" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
       {/* The shutter overlay that closes over the 3D scene */}
       <div 
         ref={shutterRef}
