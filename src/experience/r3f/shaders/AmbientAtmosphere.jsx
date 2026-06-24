@@ -14,17 +14,31 @@ const fragmentShader = `
   uniform float uTime;
   uniform float uScroll;
   uniform float uVelocity;
+  uniform float uHue;
   uniform vec2 uMouse;
   varying vec2 vUv;
   
   float noise(vec2 p) {
     return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
   }
+
+  // HSL to RGB — for hue-driven color tinting
+  vec3 hsl2rgb(float h, float s, float l) {
+    float c = (1.0 - abs(2.0 * l - 1.0)) * s;
+    float x = c * (1.0 - abs(mod(h / 60.0, 2.0) - 1.0));
+    float m = l - c * 0.5;
+    vec3 rgb;
+    if (h < 60.0)      rgb = vec3(c, x, 0.0);
+    else if (h < 120.0) rgb = vec3(x, c, 0.0);
+    else if (h < 180.0) rgb = vec3(0.0, c, x);
+    else if (h < 240.0) rgb = vec3(0.0, x, c);
+    else if (h < 300.0) rgb = vec3(x, 0.0, c);
+    else               rgb = vec3(c, 0.0, x);
+    return rgb + m;
+  }
   
   void main() {
     vec2 st = vUv;
-    
-    // Stretch coordinates based on scroll velocity (simulated motion blur)
     st.y -= uVelocity * 0.1;
     
     vec2 q = vec2(0.);
@@ -37,13 +51,13 @@ const fragmentShader = `
     
     float f = noise(st + r);
     
-    vec3 color1 = vec3(0.05, 0.05, 0.05);
-    vec3 color2 = vec3(0.12, 0.1, 0.08); // Warm undertone
+    // Base color tinted by uHue (HSL: low saturation, very dark)
+    vec3 tint = hsl2rgb(uHue, 0.25, 0.06 + f * 0.04);
     
     float mouseDist = distance(st, uMouse);
-    float interaction = smoothstep(0.5, 0.0, mouseDist) * 0.5;
+    float interaction = smoothstep(0.5, 0.0, mouseDist) * 0.04;
     
-    vec3 finalColor = mix(color1, color2, f + interaction + uScroll * 0.1);
+    vec3 finalColor = tint + interaction + uScroll * 0.01;
     
     gl_FragColor = vec4(finalColor, 1.0);
   }
@@ -55,6 +69,9 @@ export function AmbientAtmosphere() {
   
   const mouse = useRef(new THREE.Vector2(0.5, 0.5))
   const scroll = useRef(0)
+  // Hue shifts: 0=warm amber (40°), 0.65=cold steel (220°), 1=void (250°)
+  const targetHue = useRef(40)
+  const currentHue = useRef(40)
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -64,8 +81,8 @@ export function AmbientAtmosphere() {
     const handleScroll = () => {
       scroll.current = window.scrollY / (document.body.scrollHeight - window.innerHeight)
     }
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('scroll', handleScroll)
@@ -83,8 +100,20 @@ export function AmbientAtmosphere() {
       scroll.current = currentScroll
       
       mat.uniforms.uScroll.value += (scroll.current - mat.uniforms.uScroll.value) * 0.05
-      // Smooth velocity
       mat.uniforms.uVelocity.value += (velocity * 100.0 - mat.uniforms.uVelocity.value) * 0.1
+
+      // Hue interpolation: warm (40) → cold (220) at Scene 06 (scroll ~0.65)
+      if (currentScroll < 0.62) {
+        targetHue.current = 40  // warm amber-dark
+      } else if (currentScroll < 0.92) {
+        // Lerp 40→220 across Scenes 06-07
+        const t = (currentScroll - 0.62) / 0.30
+        targetHue.current = 40 + t * 180
+      } else {
+        targetHue.current = 250  // cold void for Scene 08
+      }
+      currentHue.current += (targetHue.current - currentHue.current) * 0.04
+      mat.uniforms.uHue.value = currentHue.current
     }
   })
 
@@ -99,6 +128,7 @@ export function AmbientAtmosphere() {
           uTime: { value: 0 },
           uScroll: { value: 0 },
           uVelocity: { value: 0 },
+          uHue: { value: 40 },
           uMouse: { value: new THREE.Vector2(0.5, 0.5) }
         }}
         depthWrite={false}

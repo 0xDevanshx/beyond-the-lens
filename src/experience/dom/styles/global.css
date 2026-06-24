@@ -1,18 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  cursor: none;
 }
 
 :root {
-  /* Initial colors from Config */
-  --sc-bg: oklch(95% 0.02 80);
-  --sc-fg: oklch(85% 0.05 70);
+  --sc-bg: oklch(8% 0.02 40);
+  --sc-fg: oklch(92% 0.01 60);
   --font-sans: 'Outfit', sans-serif;
   --font-serif: 'Playfair Display', serif;
 }
 
-body {
+html, body {
   font-family: var(--font-sans);
   background-color: var(--sc-bg);
   color: var(--sc-fg);
@@ -25,52 +27,297 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
 }
 
-/* Scene Setup */
+/* ─────────────────────────────────────────
+   CUSTOM CURSOR — Aperture Ring
+───────────────────────────────────────── */
+.cursor-outer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(255,255,255,0.7);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
+  mix-blend-mode: difference;
+}
+.cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  width: 4px; height: 4px;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+}
+.cursor-outer.is-hovering {
+  width: 56px; height: 56px;
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* ─────────────────────────────────────────
+   PRELOADER
+───────────────────────────────────────── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  background: oklch(5% 0 0);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.preloader__aperture {
+  width: 48px; height: 48px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1.2s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.preloader__label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  color: white;
+}
+.preloader__bar {
+  width: 120px;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  position: relative;
+  overflow: hidden;
+}
+.preloader__bar::after {
+  content: '';
+  position: absolute;
+  left: -100%;
+  top: 0; bottom: 0;
+  width: 100%;
+  background: white;
+  animation: bar-fill 2s ease-in-out forwards;
+}
+@keyframes bar-fill { to { left: 0; } }
+
+/* ─────────────────────────────────────────
+   CHAPTER NAVIGATION (left side)
+───────────────────────────────────────── */
+.chapter-nav {
+  position: fixed;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  mix-blend-mode: difference;
+}
+.chapter-nav__dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+}
+.chapter-nav__dot::before {
+  content: attr(data-label);
+  position: absolute;
+  left: calc(100% + 0.75rem);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+  white-space: nowrap;
+  color: white;
+  transition: opacity 0.3s ease;
+}
+.chapter-nav__dot:hover::before { opacity: 0.7; }
+.chapter-nav__dot.active {
+  background: white;
+  border-color: white;
+  transform: scale(1.5);
+}
+
+/* ─────────────────────────────────────────
+   SCENE SETUP
+───────────────────────────────────────── */
 .scene {
-  height: 125vh; /* Default height */
+  height: 125vh;
   position: absolute;
   width: 100%;
   display: flex;
   align-items: center;
   padding: 0 10vw;
-  pointer-events: none; /* Let clicks pass to 3D if needed */
+  pointer-events: none;
 }
 
 .scene-content {
-  max-width: 600px;
+  max-width: 700px;
 }
-
 .scene-content.center {
   margin: 0 auto;
   text-align: center;
 }
-
 .scene-content.right {
   margin-left: auto;
   text-align: right;
 }
 
-.scene h1 {
-  font-size: clamp(3rem, 6vw, 6rem);
-  margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+/* ─────────────────────────────────────────
+   TYPOGRAPHY — Scene-Specific Scales
+   The hierarchy ESCALATES across the experience
+───────────────────────────────────────── */
+
+/* Global baseline */
+.scene p {
+  font-size: clamp(1rem, 1.4vw, 1.4rem);
+  font-weight: 300;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
 }
 
-.scene p {
-  font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+/* Scene 01: Entrance — large, confident */
+.scene-01 h1 {
+  font-size: clamp(5rem, 12vw, 13rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+}
+
+/* Scene 02: Discovery — medium, intimate */
+.scene-02 .scene-discovery-copy {
+  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+  font-style: italic;
+  opacity: 0.75;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+/* Scene 03: Practice — single word, extreme scale */
+.scene-03 .practice-word {
+  font-size: clamp(6rem, 15vw, 18rem);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  font-style: italic;
+}
+
+/* Scene 04: Frame Factory — confrontational */
+.scene-04 h2 {
+  font-size: clamp(3.5rem, 6vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.scene-04 .scene-number {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  opacity: 0.4;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-sans);
   font-weight: 300;
+}
+.scene-04 p {
+  margin-top: 2rem;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  opacity: 0.7;
+}
+
+/* Scene 05: Breakthrough — maximum scale, no subtitle */
+.scene-05 h1 {
+  font-size: clamp(4rem, 14vw, 16rem);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+}
+
+/* Scene 06: Modern — editorial, split-weight contrast */
+.scene-06 h1 {
+  font-size: clamp(3rem, 6vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+.scene-06 h1 em {
+  font-style: italic;
+  font-weight: 700;
+}
+.scene-06 p {
+  margin-top: 2rem;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  opacity: 0.7;
+}
+
+/* Scene 07: Impact — punchy double-line */
+.scene-07 h1 {
+  font-size: clamp(3rem, 5.5vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.scene-07 p {
+  margin-top: 1.5rem;
+  font-size: clamp(1.1rem, 1.8vw, 2rem);
+  opacity: 0.8;
   line-height: 1.5;
 }
 
-/* Specific Scene Heights based on config */
+/* Scene 08: Resolution — monumental */
+.scene-08 h1 {
+  font-size: clamp(5rem, 12vw, 14rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+}
+.scene-08 p {
+  margin-top: 2rem;
+  font-size: clamp(1.2rem, 2vw, 2rem);
+  font-style: italic;
+  opacity: 0.6;
+  letter-spacing: -0.01em;
+}
+
+/* ─────────────────────────────────────────
+   SCROLL INDICATOR
+───────────────────────────────────────── */
+.scroll-indicator {
+  position: absolute;
+  bottom: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.4;
+  animation: indicator-float 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+.scroll-indicator__arrow {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+@keyframes indicator-float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ─────────────────────────────────────────
+   SCENE ABSOLUTE POSITIONS
+───────────────────────────────────────── */
 .scene-01 { top: 0vh; height: 125vh; }
 .scene-02 { top: 125vh; height: 125vh; }
-.scene-03 { top: 250vh; height: 150vh; } /* Pinned */
+.scene-03 { top: 250vh; height: 150vh; }
 .scene-04 { top: 400vh; height: 125vh; }
-.scene-05 { top: 525vh; height: 150vh; } /* Pinned */
+.scene-05 { top: 525vh; height: 150vh; }
 .scene-06 { top: 675vh; height: 125vh; }
 .scene-07 { top: 800vh; height: 125vh; }
-.scene-08 { top: 925vh; height: 75vh; } /* Final pin */
+.scene-08 { top: 925vh; height: 75vh; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -78,3 +325,4 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.01ms !important;
   }
 }
+

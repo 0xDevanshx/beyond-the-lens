@@ -1,22 +1,49 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { KineticText } from '../dom/typography/KineticText'
+import gsap from 'gsap'
 
 export function Scene01() {
+  const headlineRef = useRef()
+
+  useEffect(() => {
+    if (!headlineRef.current) return
+    // Variable font weight: 200 → 700 on entrance
+    gsap.fromTo(
+      headlineRef.current,
+      { fontVariationSettings: '"wght" 200', opacity: 0 },
+      {
+        fontVariationSettings: '"wght" 700',
+        opacity: 1,
+        duration: 2.5,
+        ease: 'power2.out',
+        delay: 0.2
+      }
+    )
+  }, [])
+
   return (
     <section className="scene scene-01" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <div className="scene-content center" style={{ marginTop: '-10vh' }}>
-        <KineticText tag="h1" scrollTriggerTarget=".scene-01" style={{ fontSize: 'clamp(4rem, 12vw, 12rem)', lineHeight: 0.9, letterSpacing: '-0.03em' }}>
-          The<br/>Observer
-        </KineticText>
-        <KineticText tag="p" scrollTriggerTarget=".scene-01" delay={0.4} style={{ marginTop: '2rem', fontSize: 'clamp(1rem, 1.2vw, 1.2rem)', textTransform: 'uppercase', letterSpacing: '0.2em', opacity: 0.7 }}>
+      <div className="scene-content center" style={{ marginTop: '-5vh' }}>
+        <h1
+          ref={headlineRef}
+          style={{ fontFamily: 'Playfair Display, serif', opacity: 0 }}
+          aria-label="The Observer"
+        >
+          The<br />Observer
+        </h1>
+        <KineticText
+          tag="p"
+          scrollTriggerTarget=".scene-01"
+          delay={0.8}
+          style={{ marginTop: '3rem', fontSize: 'clamp(0.8rem, 1vw, 1rem)', textTransform: 'uppercase', letterSpacing: '0.3em', opacity: 0.5 }}
+        >
           Every story begins with a moment.
         </KineticText>
       </div>
-      
-      {/* Scroll Indicator */}
-      <div style={{ position: 'absolute', bottom: '10vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', opacity: 0.5 }}>
-        <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.2em' }}>Scroll to explore</div>
-        <div style={{ width: '1px', height: '50px', backgroundColor: 'currentColor' }}></div>
+
+      {/* Animated floating arrow — replaces generic scroll indicator */}
+      <div className="scroll-indicator">
+        <span className="scroll-indicator__arrow">↓</span>
       </div>
     </section>
   )

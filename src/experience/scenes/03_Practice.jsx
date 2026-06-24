@@ -3,13 +3,16 @@ import { KineticText } from '../dom/typography/KineticText'
 
 export function Scene03() {
   return (
-    <section className="scene scene-03" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <div className="scene-content center" style={{ marginTop: '-20vh', zIndex: 10 }}>
-        <KineticText tag="h2" scrollTriggerTarget=".scene-03" style={{ fontSize: 'clamp(2rem, 4vw, 4rem)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-          Curiosity Becomes Practice
-        </KineticText>
-        <KineticText tag="p" scrollTriggerTarget=".scene-03" delay={0.4} style={{ marginTop: '2rem', fontSize: '1.2rem', fontWeight: 300, opacity: 0.7, letterSpacing: '0.1em' }}>
-          Learning through thousands of moments.
+    <section className="scene scene-03" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', overflow: 'hidden' }}>
+      {/* Single word — extreme scale, declarative */}
+      <div style={{ position: 'relative', zIndex: 10, paddingLeft: '5vw' }}>
+        <KineticText
+          tag="p"
+          scrollTriggerTarget=".scene-03"
+          className="practice-word"
+          delay={0.1}
+        >
+          Practice.
         </KineticText>
       </div>
     </section>
