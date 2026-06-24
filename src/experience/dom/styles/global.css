@@ -1,0 +1,80 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Initial colors from Config */
+  --sc-bg: oklch(95% 0.02 80);
+  --sc-fg: oklch(85% 0.05 70);
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--sc-bg);
+  color: var(--sc-fg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+}
+
+/* Scene Setup */
+.scene {
+  height: 125vh; /* Default height */
+  position: absolute;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 10vw;
+  pointer-events: none; /* Let clicks pass to 3D if needed */
+}
+
+.scene-content {
+  max-width: 600px;
+}
+
+.scene-content.center {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.scene-content.right {
+  margin-left: auto;
+  text-align: right;
+}
+
+.scene h1 {
+  font-size: clamp(3rem, 6vw, 6rem);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.scene p {
+  font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+/* Specific Scene Heights based on config */
+.scene-01 { top: 0vh; height: 125vh; }
+.scene-02 { top: 125vh; height: 125vh; }
+.scene-03 { top: 250vh; height: 150vh; } /* Pinned */
+.scene-04 { top: 400vh; height: 125vh; }
+.scene-05 { top: 525vh; height: 150vh; } /* Pinned */
+.scene-06 { top: 675vh; height: 125vh; }
+.scene-07 { top: 800vh; height: 125vh; }
+.scene-08 { top: 925vh; height: 75vh; } /* Final pin */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

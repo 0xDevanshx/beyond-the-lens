@@ -1,0 +1,34 @@
+:root {
+  /* Color System - OKLCH */
+  /* Chapter 1: Curiosity */
+  --sc-c1-bg: oklch(95% 0.02 80); /* Ivory */
+  --sc-c1-fg: oklch(85% 0.05 70); /* Warm Sand */
+  
+  /* Chapter 2: Experimentation */
+  --sc-c2-bg: oklch(55% 0.12 40); /* Copper */
+  --sc-c2-fg: oklch(65% 0.15 45); /* Burnt Orange */
+  
+  /* Chapter 3: Mastery */
+  --sc-c3-bg: oklch(25% 0.01 250); /* Graphite */
+  --sc-c3-fg: oklch(75% 0.14 75); /* Warm Gold */
+
+  /* Global variables animated by GSAP */
+  --sc-bg: var(--sc-c1-bg);
+  --sc-fg: var(--sc-c1-fg);
+
+  /* Typography */
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+@property --sc-bg {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(95% 0.02 80);
+}
+
+@property --sc-fg {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(85% 0.05 70);
+}
