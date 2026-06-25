@@ -4,7 +4,7 @@ import { KineticText } from '../dom/typography/KineticText'
 export function Scene04() {
   return (
     <section className="scene scene-04" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-      <div className="scene-content right" style={{ width: '42vw', paddingRight: '5vw' }}>
+      <div className="scene-content right scene-04-content">
         <div className="scene-number">
           [04] — Deconstruction
         </div>

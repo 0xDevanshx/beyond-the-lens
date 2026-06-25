@@ -4,7 +4,7 @@ import { KineticText } from '../dom/typography/KineticText'
 export function Scene07() {
   return (
     <section className="scene scene-07" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-      <div className="scene-content right" style={{ width: '42vw', paddingRight: '5vw' }}>
+      <div className="scene-content right scene-07-content">
         <KineticText tag="h1" scrollTriggerTarget=".scene-07">
           Stories<br />Become Impact
         </KineticText>
