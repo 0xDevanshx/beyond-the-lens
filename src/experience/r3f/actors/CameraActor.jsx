@@ -205,13 +205,13 @@ export function CameraActor({ id, url }) {
         }, 0.2)
       })
 
-      // Fade out for Scene 06
+      // Fade out for Scene 06 (Early exit to create breathing room)
       gsap.fromTo(groupRef.current.scale, 
         { x: 1.5, y: 1.5, z: 1.5 },
         {
-          x: 0.001, y: 0.001, z: 0.001, // F2: Avoid scale 0
+          x: 0.001, y: 0.001, z: 0.001, 
           ease: 'power2.in',
-          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+          scrollTrigger: { trigger: '.scene-05', start: '40% top', end: '80% top', scrub: true }
         }
       )
     } 
@@ -221,20 +221,21 @@ export function CameraActor({ id, url }) {
       gsap.set(groupRef.current.position, { y: -3, z: 0 })
       
       // Scene 06: Modern Vision
+      // Enters ONLY after Vintage Camera has completely left the stage + a 30vh visual pause
       gsap.to(groupRef.current.scale, {
         x: 3, y: 3, z: 3,
         ease: 'power2.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
       })
       gsap.to(groupRef.current.position, {
         x: 3, y: 0, z: 2,
         ease: 'power2.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom bottom', scrub: true }
+        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
       })
       gsap.to(groupRef.current.rotation, {
         y: -Math.PI / 4,
         ease: 'none',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom top', scrub: true }
+        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '70% top', scrub: true }
       })
       
       // Scene 07: Move to left to clear space for text
