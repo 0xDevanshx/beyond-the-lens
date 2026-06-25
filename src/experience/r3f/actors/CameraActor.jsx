@@ -96,11 +96,12 @@ export function CameraActor({ id, url }) {
         ease: 'power1.inOut',
         scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'bottom top', scrub: true }
       })
-      // Z-recession: camera drifts into darkness as it fades — not just scales away
+      // Z-recession & drift right: camera drifts into darkness and to the right as it fades
       // Used fromTo to prevent reading initial state at page load which was -5
       gsap.fromTo(groupRef.current.position, 
-        { z: 1 },
+        { x: -1.5, z: 1 },
         {
+          x: 5, // move to the right part of the site
           z: -5,
           ease: 'power1.inOut',
           scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'bottom top', scrub: true }
