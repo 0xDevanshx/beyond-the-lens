@@ -31,8 +31,16 @@ export function StoryCamera() {
     // Scene 04: Orbit around Vintage Camera
     gsap.to(cameraRef.current.position, {
       x: 5, z: 5,
-      ease: 'sine.inOut',
+      ease: 'power2.inOut',
       scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
+    })
+
+    // Scene 05: Gentle drift back toward frontal as burst fires
+    // Camera should not remain parked at the Scene 04 orbit position through all 150vh
+    gsap.to(cameraRef.current.position, {
+      x: 1, z: 6,
+      ease: 'power1.inOut',
+      scrollTrigger: { trigger: '.scene-05', start: 'top bottom', end: '80% top', scrub: true }
     })
 
     // Scene 06: Push slightly IN for Modern Camera Hero Shot (not a retreat)

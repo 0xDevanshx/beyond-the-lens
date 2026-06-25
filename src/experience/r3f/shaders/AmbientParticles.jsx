@@ -46,14 +46,14 @@ export function AmbientParticles() {
       duration: 0.2,
       ease: 'power4.out',
       delay: 0.5,
-      scrollTrigger: { trigger: '.scene-05', start: 'top center', toggleActions: 'play reverse play reverse' }
+      scrollTrigger: { trigger: '.scene-05', start: 'top center', toggleActions: 'play none none none' }
     })
     gsap.to(params.current, {
       burstScale: 1,
       duration: 5,
       ease: 'power2.out',
       delay: 0.2,
-      scrollTrigger: { trigger: '.scene-05', start: 'top center', toggleActions: 'play reverse play reverse' }
+      scrollTrigger: { trigger: '.scene-05', start: 'top center', toggleActions: 'play none none none' }
     })
 
     // Scene 06: Freeze
