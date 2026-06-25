@@ -14,6 +14,11 @@ export function Experience() {
   const progressRef = useRef()
 
   useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+    
     const timer = setTimeout(() => setDomReady(true), 100)
     return () => clearTimeout(timer)
   }, [])
