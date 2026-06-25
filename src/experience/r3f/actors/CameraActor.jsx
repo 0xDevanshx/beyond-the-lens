@@ -13,6 +13,8 @@ export function CameraActor({ id, url }) {
   const { scene } = useGLTF(url)
   const groupRef = useRef()
   const originalY = useRef(0)
+  const burstDir = useRef(new THREE.Vector3())
+  const modernParallax = useRef({ intensity: 0 })
   const mouseTarget = useRef(new THREE.Vector2(0, 0))
 
   useEffect(() => {
@@ -48,6 +50,21 @@ export function CameraActor({ id, url }) {
       
       scene.rotation.x = -mouseTarget.current.y
       scene.rotation.y = mouseTarget.current.x
+    } else if (id === 'modern') {
+      const intensity = modernParallax.current.intensity
+
+      if (intensity > 0.01) {
+        // Character 03: Mouse parallax (3% influence) enabled only during Hero Dwell
+        mouseTarget.current.x = THREE.MathUtils.lerp(mouseTarget.current.x, state.mouse.x * 0.03, 0.05)
+        mouseTarget.current.y = THREE.MathUtils.lerp(mouseTarget.current.y, state.mouse.y * 0.03, 0.05)
+
+        scene.rotation.x = -mouseTarget.current.y * intensity
+        scene.rotation.y = mouseTarget.current.x * intensity
+      } else {
+        // Reset rotation nicely if moving
+        scene.rotation.x = THREE.MathUtils.lerp(scene.rotation.x, 0, 0.05)
+        scene.rotation.y = THREE.MathUtils.lerp(scene.rotation.y, 0, 0.05)
+      }
     }
   })
 
@@ -217,41 +234,129 @@ export function CameraActor({ id, url }) {
     } 
     else if (id === 'modern') {
       gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
-      // Clean vertical entrance — no z-fight from diagonal rise
-      gsap.set(groupRef.current.position, { y: -3, z: 0 })
       
-      // Scene 06: Modern Vision
-      gsap.to(groupRef.current.scale, {
-        x: 3, y: 3, z: 3,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
-      })
-      gsap.to(groupRef.current.position, {
-        x: 3, y: 0, z: 2,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom bottom', scrub: true }
-      })
-      gsap.to(groupRef.current.rotation, {
-        y: -Math.PI / 4,
-        ease: 'none',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom top', scrub: true }
-      })
-      
-      // Scene 07: Move to left to clear space for text
+      // Scene 06: Swooping entrance arc and extended dwell
+      gsap.set(groupRef.current.position, { x: 0, y: -4, z: -3 })
+      gsap.set(groupRef.current.rotation, { y: Math.PI / 4 })
+
+      // Entrance arc (Scale + Pos + Rot) - direct to Hero composition
+      // Less horizontal travel: from x: 0 to x: 2 (instead of 3)
       gsap.fromTo(groupRef.current.position, 
-        { x: 3, y: 0, z: 2 },
+        { x: 0, y: -4, z: -3 },
         {
-          x: -4,
+          x: 2, y: 0, z: 2.5,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.scale, 
+        { x: 0.001, y: 0.001, z: 0.001 },
+        {
+          x: 3.5, y: 3.5, z: 3.5,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.rotation, 
+        { y: Math.PI / 4 },
+        {
+          y: -Math.PI / 6, // Confident single ease
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
+
+      // Hero Dwell 1: very slow depth push and parallax enable
+      gsap.fromTo(modernParallax.current,
+        { intensity: 0 },
+        {
+          intensity: 1,
+          ease: 'power1.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: 'center center', end: 'bottom bottom', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.position, 
+        { x: 2, y: 0, z: 2.5 },
+        {
+          x: 1.8, y: 0, z: 3.2, // Tiny drift left and push in
+          ease: 'none',
+          scrollTrigger: { trigger: '.scene-06', start: 'center center', end: 'bottom bottom', scrub: true }
+        }
+      )
+
+      // Scene 07: Orbital sweep left (fade out parallax)
+      gsap.fromTo(modernParallax.current,
+        { intensity: 1 },
+        {
+          intensity: 0,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: '30% center', scrub: true }
+        }
+      )
+      
+      // The Sweep: graceful shallow arc. Pull back slightly, then push in.
+      gsap.fromTo(groupRef.current.position, 
+        { x: 1.8, y: 0, z: 3.2 },
+        {
+          x: -3.5, y: 0.5, z: 2,
           ease: 'power2.inOut',
           scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
         }
       )
+      // Slight yaw to maintain focus toward center during pan
+      gsap.fromTo(groupRef.current.rotation, 
+        { y: -Math.PI / 6 },
+        {
+          y: -Math.PI / 4, 
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
+
+      // Hero Dwell 2: Scene 07 second half. Re-enable parallax and drift.
+      gsap.fromTo(modernParallax.current,
+        { intensity: 0 },
+        {
+          intensity: 1,
+          ease: 'power1.inOut',
+          scrollTrigger: { trigger: '.scene-07', start: 'center center', end: 'bottom bottom', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.position, 
+        { x: -3.5, y: 0.5, z: 2 },
+        {
+          x: -3.7, y: 0.5, z: 2.3, // slow drift further left and slight push-in
+          ease: 'none',
+          scrollTrigger: { trigger: '.scene-07', start: 'center center', end: 'bottom bottom', scrub: true }
+        }
+      )
+      
       // Scene 08: Infinite Frame (scales up massively)
-      gsap.to(groupRef.current.scale, {
-        x: 30, y: 30, z: 30, // F5: Max scale 30 instead of 100 to save depth precision
-        ease: 'power4.in',
-        scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
+      // Parallax fades out immediately
+      gsap.to(modernParallax.current, {
+        intensity: 0,
+        ease: 'power4.out',
+        scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'center center', scrub: true }
       })
+      gsap.fromTo(groupRef.current.scale, 
+        { x: 3.5, y: 3.5, z: 3.5 },
+        {
+          x: 30, y: 30, z: 30, 
+          ease: 'power4.in',
+          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
+        }
+      )
+      // Very subtle roll and pitch to avoid spinning sensation
+      gsap.fromTo(groupRef.current.rotation, 
+        { x: 0, y: -Math.PI / 4, z: 0 },
+        {
+          x: -0.05, 
+          y: -Math.PI / 4.2, 
+          z: -0.05,
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
+        }
+      )
     }
   }, { dependencies: [id] })
 
