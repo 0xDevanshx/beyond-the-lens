@@ -41,7 +41,7 @@ export function Experience() {
       {/* Scroll progress — 2px right edge bar */}
       <div ref={progressRef} className="scroll-progress" aria-hidden="true" />
 
-      <Locomotion>
+      <Locomotion preloaderDone={preloaderDone}>
         <MasterTimeline>
           <div style={{ height: `${CONFIG.scroll.totalHeight}vh`, position: 'relative' }}>
             {/* Chapter dot navigation — fixed left side */}
