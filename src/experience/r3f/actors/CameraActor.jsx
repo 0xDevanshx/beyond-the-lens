@@ -216,8 +216,8 @@ export function CameraActor({ id, url }) {
       )
     } 
     else if (id === 'modern') {
-      // Start completely off-screen to the right
-      gsap.set(groupRef.current.position, { x: 15, y: 0, z: -5 })
+      // Start completely off-screen to the right (reduced from 15)
+      gsap.set(groupRef.current.position, { x: 8, y: 0, z: -3 })
       gsap.set(groupRef.current.rotation, { x: Math.PI / 4, y: Math.PI, z: 0 })
       gsap.set(groupRef.current.scale, { x: 3, y: 3, z: 3 })
       
@@ -233,8 +233,9 @@ export function CameraActor({ id, url }) {
       })
 
       // 1. Entrance: Swoop in from far right to center-right
+      // Reduced travel distance to slow down visual speed
       tl.to(groupRef.current.position, {
-        x: 3, y: -1, z: 0,
+        x: 2, y: -0.5, z: 0,
         ease: 'power2.out',
         duration: 2
       })
@@ -251,7 +252,7 @@ export function CameraActor({ id, url }) {
 
       // 2. Loop Up-Left
       .to(groupRef.current.position, {
-        x: -2, y: 3, z: -2,
+        x: -1.5, y: 2, z: -1.5,
         ease: 'sine.inOut',
         duration: 1.5
       })
@@ -268,7 +269,7 @@ export function CameraActor({ id, url }) {
 
       // 3. Loop Down-Right (The apex of the loop)
       .to(groupRef.current.position, {
-        x: 1, y: -2, z: 4,
+        x: 0.8, y: -1.5, z: 3,
         ease: 'sine.inOut',
         duration: 2
       })
@@ -285,7 +286,7 @@ export function CameraActor({ id, url }) {
 
       // 4. Loop Up-Left (Crossing through center)
       .to(groupRef.current.position, {
-        x: -3, y: 1, z: 1,
+        x: -2, y: 0.8, z: 0.5,
         ease: 'sine.inOut',
         duration: 1.5
       })
@@ -302,7 +303,7 @@ export function CameraActor({ id, url }) {
 
       // 5. Final Exit: Swoosh out of frame to the left and freeze
       .to(groupRef.current.position, {
-        x: -15, y: -4, z: -5,
+        x: -8, y: -2.5, z: -3,
         ease: 'power2.in',
         duration: 2
       })
@@ -312,7 +313,7 @@ export function CameraActor({ id, url }) {
         duration: 2
       }, '<')
 
-      // The camera is now off-screen at x: -15. 
+      // The camera is now off-screen at x: -8. 
       // It will remain frozen there during Scene 08 (Infinite Frame).
     }
   }, { dependencies: [id] })
