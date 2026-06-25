@@ -13,6 +13,12 @@ export function CameraActor({ id, url }) {
   const groupRef = useRef()
   const originalY = useRef(0)
   const mouseTarget = useRef(new THREE.Vector2(0, 0))
+  const [domReady, setDomReady] = React.useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDomReady(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     if (scene) {
@@ -51,7 +57,7 @@ export function CameraActor({ id, url }) {
   })
 
   useGSAP(() => {
-    if (!groupRef.current) return
+    if (!domReady || !groupRef.current) return
 
     // Convert scroll heights to viewport percentages for GSAP ScrollTrigger start/end
     // total scroll is CONFIG.scroll.totalHeight vh
@@ -316,7 +322,7 @@ export function CameraActor({ id, url }) {
       // The camera is now off-screen at x: -15. 
       // It will remain frozen there during Scene 08 (Infinite Frame).
     }
-  }, { dependencies: [id] })
+  }, { dependencies: [id, domReady] })
 
   return (
     <group ref={groupRef} frustumCulled={false}>
