@@ -11,8 +11,15 @@ export function KineticText({ children, tag = 'div', className = '', delay = 0, 
   const textRef = useRef()
   const Tag = tag
 
+  const [domReady, setDomReady] = React.useState(false)
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setDomReady(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
+
   useGSAP(() => {
-    if (!textRef.current) return
+    if (!domReady || !textRef.current) return
 
     // Initialize SplitType
     const split = new SplitType(textRef.current, { types: 'lines,words,chars' })
@@ -51,7 +58,7 @@ export function KineticText({ children, tag = 'div', className = '', delay = 0, 
     return () => {
       split.revert()
     }
-  }, { dependencies: [delay, stagger, scrollTriggerTarget], scope: textRef })
+  }, { dependencies: [delay, stagger, scrollTriggerTarget, domReady], scope: textRef })
 
   // Removed clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)' to prevent the blur effect from being visually clipped at the edges
   return (
