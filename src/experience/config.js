@@ -1,13 +1,13 @@
 export const CONFIG = {
   colors: {
-    c1_bg: 'oklch(95% 0.02 80)',   // Ivory (hidden behind canvas)
-    c1_fg: 'oklch(92% 0.03 60)',   // Warm near-white
-    c2_bg: 'oklch(55% 0.12 40)',   // Copper (hidden behind canvas)
-    c2_fg: 'oklch(90% 0.04 60)',   // Still warm white — canvas is dark, text must read
-    c3_bg: 'oklch(25% 0.01 250)',  // Graphite (hidden behind canvas)
-    c3_fg: 'oklch(88% 0.06 75)',   // Warm gold-white
-    c4_bg: 'oklch(10% 0.02 260)',  // Deep Space (hidden behind canvas)
-    c4_fg: 'oklch(92% 0.04 260)'   // Cool starlight-white
+    c1_bg: 'oklch(95% 0.02 80)',  // Ivory
+    c1_fg: 'oklch(85% 0.05 70)',  // Warm Sand
+    c2_bg: 'oklch(55% 0.12 40)',  // Copper
+    c2_fg: 'oklch(65% 0.15 45)',  // Burnt Orange
+    c3_bg: 'oklch(25% 0.01 250)', // Graphite
+    c3_fg: 'oklch(75% 0.14 75)',  // Warm Gold
+    c4_bg: 'oklch(10% 0.02 260)', // Deep Space
+    c4_fg: 'oklch(90% 0.05 260)'  // Starlight
   },
   scroll: {
     totalHeight: 1000, // 1000vh
