@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useLenis } from 'lenis/react'
 
 const CHAPTERS = [
   { label: 'Observer', scene: '.scene-01', top: 0 },
@@ -14,7 +13,6 @@ const CHAPTERS = [
 
 export function ChapterNav() {
   const [active, setActive] = useState(0)
-  const lenis = useLenis()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,6 +34,7 @@ export function ChapterNav() {
   const scrollTo = (index) => {
     const target = CHAPTERS[index].top
     const px = (target / 100) * window.innerHeight
+    const lenis = window.lenis
     if (lenis) {
       lenis.scrollTo(px, { duration: 1.8, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) })
     } else {

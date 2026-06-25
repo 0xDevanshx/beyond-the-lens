@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react'
-import { ReactLenis, useLenis } from 'lenis/react'
+import React, { useEffect, useRef } from 'react'
+import { ReactLenis } from 'lenis/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function Locomotion({ children, preloaderDone }) {
-  const lenis = useLenis()
+  const lenisRef = useRef()
 
   useEffect(() => {
+    const lenis = lenisRef.current?.lenis
     if (!lenis) return
+
+    window.lenis = lenis
     
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add((time) => lenis.raf(time * 1000))
@@ -17,10 +20,12 @@ export function Locomotion({ children, preloaderDone }) {
     
     return () => { 
       gsap.ticker.remove(lenis?.raf) 
+      delete window.lenis
     }
-  }, [lenis])
+  }, [])
 
   useEffect(() => {
+    const lenis = lenisRef.current?.lenis
     if (!lenis) return
     
     if (!preloaderDone) {
@@ -36,10 +41,10 @@ export function Locomotion({ children, preloaderDone }) {
         ScrollTrigger.refresh()
       })
     }
-  }, [lenis, preloaderDone])
+  }, [preloaderDone])
 
   return (
-    <ReactLenis root options={{ lerp: 0.08, smoothWheel: true }}>
+    <ReactLenis ref={lenisRef} root options={{ lerp: 0.08, smoothWheel: true }}>
       {children}
     </ReactLenis>
   )
