@@ -1,11 +1,10 @@
 import React, { useRef, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF, Center } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import * as THREE from 'three'
-import { CONFIG } from '../../config'
 
 gsap.registerPlugin(ScrollTrigger)
 

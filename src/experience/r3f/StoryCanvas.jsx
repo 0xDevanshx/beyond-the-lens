@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { AmbientAtmosphere } from './shaders/AmbientAtmosphere'
 import { AmbientParticles } from './shaders/AmbientParticles'

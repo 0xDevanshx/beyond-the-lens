@@ -64,7 +64,7 @@ export function Scene08() {
           className="identity-cta"
           aria-label="Send an email"
         >
-          Let's create together →
+          Let's create together <span className="cta-arrow">→</span>
         </a>
       </div>
     </section>
