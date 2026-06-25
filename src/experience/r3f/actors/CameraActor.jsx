@@ -226,13 +226,13 @@ export function CameraActor({ id, url }) {
         }, 0.2)
       })
 
-      // Fade out for Scene 06
+      // Fade out for Scene 06 (Early exit to create breathing room)
       gsap.fromTo(groupRef.current.scale, 
         { x: 1.5, y: 1.5, z: 1.5 },
         {
-          x: 0.001, y: 0.001, z: 0.001, // F2: Avoid scale 0
+          x: 0.001, y: 0.001, z: 0.001, 
           ease: 'power2.in',
-          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+          scrollTrigger: { trigger: '.scene-05', start: '40% top', end: '80% top', scrub: true }
         }
       )
     } 
@@ -245,12 +245,13 @@ export function CameraActor({ id, url }) {
       gsap.set(groupRef.current.rotation, { y: Math.PI / 4 })
 
       // Entrance arc (Scale + Pos + Rot)
+      // Enters ONLY after Vintage Camera has completely left the stage + a 30vh visual pause
       gsap.fromTo(groupRef.current.position, 
         { x: 0, y: -4, z: -3 },
         {
           x: 3, y: 0, z: 2.5,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
         }
       )
       gsap.fromTo(groupRef.current.scale, 
@@ -258,7 +259,7 @@ export function CameraActor({ id, url }) {
         {
           x: 3.5, y: 3.5, z: 3.5,
           ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
         }
       )
       gsap.fromTo(groupRef.current.rotation, 
@@ -266,7 +267,7 @@ export function CameraActor({ id, url }) {
         {
           y: -Math.PI / 6,
           ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom bottom', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '70% top', scrub: true }
         }
       )
 
@@ -276,7 +277,7 @@ export function CameraActor({ id, url }) {
         {
           intensity: 1,
           ease: 'power1.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: 'center center', end: 'bottom bottom', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: '60% top', end: 'bottom bottom', scrub: true }
         }
       )
       gsap.fromTo(groupRef.current.position, 
@@ -284,7 +285,7 @@ export function CameraActor({ id, url }) {
         {
           x: 2.5, y: 0, z: 3.2, // slow push in and drift
           ease: 'none',
-          scrollTrigger: { trigger: '.scene-06', start: 'center center', end: 'bottom bottom', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: '60% top', end: 'bottom bottom', scrub: true }
         }
       )
 
