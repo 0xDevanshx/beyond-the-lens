@@ -216,60 +216,105 @@ export function CameraActor({ id, url }) {
       )
     } 
     else if (id === 'modern') {
-      // ARC PATH MOTION — single timeline owns all keyframes.
-      // One ScrollTrigger scrubs the entire arc from Scene 06 entrance → Scene 07 exit.
-      // This is the ONLY correct way: multiple fromTo tweens on the same property
-      // apply their FROM values simultaneously on init, causing conflicts and invisibility.
-
-      gsap.set(groupRef.current.scale,    { x: 0.001, y: 0.001, z: 0.001 })
-      gsap.set(groupRef.current.position, { x: 7, y: -5, z: -2 })
-      gsap.set(groupRef.current.rotation, { x: 0, y: -Math.PI / 3, z: 0 })
-
-      // Single timeline: one ScrollTrigger, one playhead, no conflicts
-      const arcTl = gsap.timeline({
+      // Start completely off-screen to the right
+      gsap.set(groupRef.current.position, { x: 15, y: 0, z: -5 })
+      gsap.set(groupRef.current.rotation, { x: Math.PI / 4, y: Math.PI, z: 0 })
+      gsap.set(groupRef.current.scale, { x: 3, y: 3, z: 3 })
+      
+      // Master rollercoaster timeline covering Scene 06 and Scene 07
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: '.scene-06',
-          start: 'top top',
-          endTrigger: '.scene-07',
-          end: 'center center',
-          scrub: true,
+          start: 'top bottom', // Start entering when Scene 06 appears
+          endTrigger: '.scene-08',
+          end: 'top top', // Finish completely exiting by the time Scene 08 hits top
+          scrub: true
         }
       })
 
-      // ── Beat 1 (duration 2): Enter from right, scale up ──────────────────
-      arcTl.to(groupRef.current.position,
-        { x: 3.5, y: 0.5, z: 2.5, ease: 'power2.out', duration: 2 }, 0)
-      arcTl.to(groupRef.current.scale,
-        { x: 3.2, y: 3.2, z: 3.2, ease: 'power2.out', duration: 2 }, 0)
-      arcTl.to(groupRef.current.rotation,
-        { y: -Math.PI / 5, ease: 'power2.out', duration: 2 }, 0)
+      // 1. Entrance: Swoop in from far right to center-right
+      tl.to(groupRef.current.position, {
+        x: 3, y: -1, z: 0,
+        ease: 'power2.out',
+        duration: 2
+      })
+      .to(groupRef.current.rotation, {
+        x: 0, y: Math.PI / 2, z: Math.PI / 6,
+        ease: 'power2.out',
+        duration: 2
+      }, '<')
+      .to(groupRef.current.scale, {
+        x: 4, y: 4, z: 4, // slight zoom in
+        ease: 'power1.inOut',
+        duration: 2
+      }, '<')
 
-      // ── Beat 2 (duration 3): Arc UP through center, zoom in ──────────────
-      arcTl.to(groupRef.current.position,
-        { x: -0.5, y: 3.5, z: 5.0, ease: 'sine.inOut', duration: 3 }, 2)
-      arcTl.to(groupRef.current.rotation,
-        { y: Math.PI / 8, ease: 'sine.inOut', duration: 3 }, 2)
+      // 2. Loop Up-Left
+      .to(groupRef.current.position, {
+        x: -2, y: 3, z: -2,
+        ease: 'sine.inOut',
+        duration: 1.5
+      })
+      .to(groupRef.current.rotation, {
+        x: -Math.PI / 4, y: 0, z: Math.PI / 2,
+        ease: 'none',
+        duration: 1.5
+      }, '<')
+      .to(groupRef.current.scale, {
+        x: 2.5, y: 2.5, z: 2.5, // push back (zoom out)
+        ease: 'sine.inOut',
+        duration: 1.5
+      }, '<')
 
-      // ── Beat 3 (duration 3): Arc DOWN left, zoom out ─────────────────────
-      arcTl.to(groupRef.current.position,
-        { x: -3.5, y: -0.5, z: 2.0, ease: 'sine.inOut', duration: 3 }, 5)
-      arcTl.to(groupRef.current.rotation,
-        { y: Math.PI / 3, ease: 'sine.inOut', duration: 3 }, 5)
+      // 3. Loop Down-Right (The apex of the loop)
+      .to(groupRef.current.position, {
+        x: 1, y: -2, z: 4,
+        ease: 'sine.inOut',
+        duration: 2
+      })
+      .to(groupRef.current.rotation, {
+        x: Math.PI / 6, y: -Math.PI / 2, z: Math.PI,
+        ease: 'none',
+        duration: 2
+      }, '<')
+      .to(groupRef.current.scale, {
+        x: 5, y: 5, z: 5, // massive push in (zoom in)
+        ease: 'sine.inOut',
+        duration: 2
+      }, '<')
 
-      // ── Beat 4 (duration 2): Sweep off screen left ───────────────────────
-      arcTl.to(groupRef.current.position,
-        { x: -14, y: -2, z: 1, ease: 'power2.in', duration: 2 }, 8)
-      arcTl.to(groupRef.current.rotation,
-        { y: Math.PI / 2, ease: 'power2.in', duration: 2 }, 8)
+      // 4. Loop Up-Left (Crossing through center)
+      .to(groupRef.current.position, {
+        x: -3, y: 1, z: 1,
+        ease: 'sine.inOut',
+        duration: 1.5
+      })
+      .to(groupRef.current.rotation, {
+        x: 0, y: -Math.PI, z: Math.PI * 1.5,
+        ease: 'none',
+        duration: 1.5
+      }, '<')
+      .to(groupRef.current.scale, {
+        x: 3, y: 3, z: 3,
+        ease: 'sine.inOut',
+        duration: 1.5
+      }, '<')
 
-      // ── Beat 5 (duration 2): Scale to invisible while off-screen ─────────
-      // Insurance: ensures 3.glb is 100% gone before Scene 08 Infinite Frame
-      arcTl.to(groupRef.current.scale,
-        { x: 0.001, y: 0.001, z: 0.001, ease: 'power2.in', duration: 2 }, 8)
+      // 5. Final Exit: Swoosh out of frame to the left and freeze
+      .to(groupRef.current.position, {
+        x: -15, y: -4, z: -5,
+        ease: 'power2.in',
+        duration: 2
+      })
+      .to(groupRef.current.rotation, {
+        x: -Math.PI / 4, y: -Math.PI * 2, z: Math.PI * 2,
+        ease: 'power2.in',
+        duration: 2
+      }, '<')
+
+      // The camera is now off-screen at x: -15. 
+      // It will remain frozen there during Scene 08 (Infinite Frame).
     }
-
-
-
   }, { dependencies: [id] })
 
   return (
