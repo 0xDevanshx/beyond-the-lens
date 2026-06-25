@@ -277,11 +277,23 @@ export function CameraActor({ id, url }) {
       )
       
       // Scene 08: Infinite Frame (scales up massively)
-      gsap.to(groupRef.current.scale, {
-        x: 30, y: 30, z: 30, 
-        ease: 'power4.in',
-        scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
-      })
+      // Re-center position first so the 30x scale doesn't push model off-screen
+      gsap.fromTo(groupRef.current.position,
+        { x: -3.8, y: 0, z: 1.8 },
+        {
+          x: 0, y: 0, z: 0,
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'center center', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.scale,
+        { x: 3.5, y: 3.5, z: 3.5 },
+        {
+          x: 30, y: 30, z: 30, 
+          ease: 'power4.in',
+          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
+        }
+      )
       // Very subtle roll and pitch to avoid spinning sensation
       gsap.fromTo(groupRef.current.rotation, 
         { x: 0, y: -Math.PI / 4, z: 0 },

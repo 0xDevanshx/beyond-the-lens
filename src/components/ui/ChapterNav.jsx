@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useLenis } from 'lenis/react'
 
 const CHAPTERS = [
-  { label: 'Observer', scene: '.scene-01', top: 0 },
-  { label: 'First Lens', scene: '.scene-02', top: 125 },
-  { label: 'Practice', scene: '.scene-03', top: 250 },
-  { label: 'Frame Factory', scene: '.scene-04', top: 400 },
-  { label: 'Finding A Voice', scene: '.scene-05', top: 525 },
-  { label: 'Modern Vision', scene: '.scene-06', top: 675 },
-  { label: 'Impact', scene: '.scene-07', top: 800 },
-  { label: 'Infinite Frame', scene: '.scene-08', top: 925 },
+  { label: 'Observer', scene: '.scene-01' },
+  { label: 'First Lens', scene: '.scene-02' },
+  { label: 'Practice', scene: '.scene-03' },
+  { label: 'Frame Factory', scene: '.scene-04' },
+  { label: 'Finding A Voice', scene: '.scene-05' },
+  { label: 'Modern Vision', scene: '.scene-06' },
+  { label: 'Impact', scene: '.scene-07' },
+  { label: 'Infinite Frame', scene: '.scene-08' },
 ]
 
 export function ChapterNav() {
@@ -17,25 +17,50 @@ export function ChapterNav() {
   const lenis = useLenis()
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollVh = (window.scrollY / window.innerHeight) * 100
-      let current = 0
-      for (let i = 0; i < CHAPTERS.length; i++) {
-        if (scrollVh >= CHAPTERS[i].top - 20) current = i
+    const observers = []
+    const sections = CHAPTERS.map((c, i) => ({ el: document.querySelector(c.scene), index: i }))
+      .filter(s => s.el !== null)
+
+    // Use IntersectionObserver for accurate detection of which section is in view
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const idx = sections.findIndex(s => s.el === entry.target)
+            if (idx !== -1) setActive(idx)
+          }
+        })
+      },
+      {
+        rootMargin: '-40% 0px -40% 0px', // activate when section center is roughly in view
+        threshold: 0,
       }
-      setActive(current)
+    )
+
+    sections.forEach(s => io.observe(s.el))
+    observers.push(io)
+
+    // Fallback: always activate last chapter at bottom of page
+    const handleScroll = () => {
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50
+      if (atBottom) setActive(CHAPTERS.length - 1)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+
+    return () => {
+      observers.forEach(o => o.disconnect())
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   const scrollTo = (index) => {
-    const target = CHAPTERS[index].top
-    const px = (target / 100) * window.innerHeight
-    if (lenis) {
-      lenis.scrollTo(px, { duration: 1.8, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) })
-    } else {
-      window.scrollTo({ top: px, behavior: 'smooth' })
+    const el = document.querySelector(CHAPTERS[index].scene)
+    if (el) {
+      if (lenis) {
+        lenis.scrollTo(el, { duration: 1.8, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) })
+      } else {
+        el.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }
 
