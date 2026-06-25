@@ -216,144 +216,133 @@ export function CameraActor({ id, url }) {
       )
     } 
     else if (id === 'modern') {
-      gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
-      gsap.set(groupRef.current.position, { x: 0, y: -3, z: 0 })
-      gsap.set(groupRef.current.rotation, { x: 0, y: 0, z: 0 })
+      // ARC PATH MOTION — follows the red line in the screenshot:
+      //  1. Enters right side (Scene 06 opens)
+      //  2. Arcs UP and INWARD into a big looping orbit
+      //  3. Zooms in then out (depth breathing)
+      //  4. Sweeps DOWN and LEFT through the mid-screen
+      //  5. Exits off the LEFT edge and FREEZES — never returns
+      //  6. Scene 08 — camera is completely off-screen, invisible
 
-      // ─── SCENE 06 ─── Modern Vision
-      // Beat 1: Rise up and scale in from below (enters after vintage is gone)
+      gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
+      gsap.set(groupRef.current.position, { x: 6, y: -4, z: -2 })
+      gsap.set(groupRef.current.rotation, { y: -Math.PI / 3 })
+
+      // ── BEAT 1: ENTER from right ─────────────────────────────────────────
+      // Camera rises from below-right into first hero composition
+      // Scene 06: top → 30%
+      gsap.fromTo(groupRef.current.position,
+        { x: 6, y: -4, z: -2 },
+        {
+          x: 3.5, y: 0.5, z: 2,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '30% top', scrub: true }
+        }
+      )
       gsap.fromTo(groupRef.current.scale,
         { x: 0.001, y: 0.001, z: 0.001 },
         {
-          x: 3, y: 3, z: 3,
+          x: 3.2, y: 3.2, z: 3.2,
           ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '20% top', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.position,
-        { x: 0, y: -3, z: 0 },
-        {
-          x: 2, y: 0, z: 2,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '20% top', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation,
-        { y: 0 },
-        {
-          y: -Math.PI / 5,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '20% top', scrub: true }
-        }
-      )
-
-      // Beat 2: Arc left + zoom in (lens toward viewer)
-      gsap.fromTo(groupRef.current.position,
-        { x: 2, y: 0, z: 2 },
-        {
-          x: -1, y: 0.5, z: 3.5,
-          ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: '20% top', end: '45% top', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation,
-        { y: -Math.PI / 5 },
-        {
-          y: Math.PI / 6,
-          ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: '20% top', end: '45% top', scrub: true }
-        }
-      )
-
-      // Beat 3: Swing right + pull back (reveal silhouette)
-      gsap.fromTo(groupRef.current.position,
-        { x: -1, y: 0.5, z: 3.5 },
-        {
-          x: 2.5, y: -0.3, z: 1.5,
-          ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: '45% top', end: '70% top', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation,
-        { y: Math.PI / 6 },
-        {
-          y: -Math.PI / 3,
-          ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: '45% top', end: '70% top', scrub: true }
-        }
-      )
-
-      // Beat 4: Settle into right-of-center hero frame, push in gently
-      gsap.fromTo(groupRef.current.position,
-        { x: 2.5, y: -0.3, z: 1.5 },
-        {
-          x: 2.8, y: 0, z: 2.5,
-          ease: 'power1.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: '70% top', end: 'bottom bottom', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '30% top', scrub: true }
         }
       )
       gsap.fromTo(groupRef.current.rotation,
         { y: -Math.PI / 3 },
         {
-          y: -Math.PI / 4,
-          ease: 'power1.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: '70% top', end: 'bottom bottom', scrub: true }
+          y: -Math.PI / 5,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '30% top', scrub: true }
         }
       )
 
-      // ─── SCENE 07 ─── Impact
-      // Beat 5: Arc swing to the left (arc path — pull back, drift left, push in)
+      // ── BEAT 2: ARC UP and LOOP left (big oval top of arc) ───────────────
+      // Scene 06: 30% → 65%
       gsap.fromTo(groupRef.current.position,
-        { x: 2.8, y: 0, z: 2.5 },
+        { x: 3.5, y: 0.5, z: 2 },
         {
-          x: -0.5, y: 0.4, z: 1.2,
+          x: 0, y: 3.5, z: 0.5,   // sweeps high and center
           ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: '35% top', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: '30% top', end: '65% top', scrub: true }
         }
       )
       gsap.fromTo(groupRef.current.rotation,
-        { y: -Math.PI / 4 },
+        { y: -Math.PI / 5 },
         {
-          y: Math.PI / 4,
+          y: Math.PI / 6,          // rotates as it arcs
           ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: '35% top', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: '30% top', end: '65% top', scrub: true }
+        }
+      )
+      // Zoom IN to show lens detail at loop peak
+      gsap.fromTo(groupRef.current.position,
+        { z: 2 },
+        {
+          z: 4.5,                  // push forward
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: '40% top', end: '55% top', scrub: true }
         }
       )
 
-      // Beat 6: Push back in, revolve further left
+      // ── BEAT 3: ARC DOWN left side of loop ───────────────────────────────
+      // Scene 06: 65% → 100%
       gsap.fromTo(groupRef.current.position,
-        { x: -0.5, y: 0.4, z: 1.2 },
+        { x: 0, y: 3.5, z: 4.5 },
         {
-          x: -3.2, y: 0.2, z: 2.8,
+          x: -3.5, y: -0.5, z: 2,  // sweeps down-left
           ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: '35% top', end: '65% top', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: '65% top', end: 'bottom top', scrub: true }
         }
       )
       gsap.fromTo(groupRef.current.rotation,
-        { y: Math.PI / 4 },
+        { y: Math.PI / 6 },
         {
-          y: -Math.PI / 2.5,
+          y: Math.PI / 3,           // continues rotating
           ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: '35% top', end: '65% top', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: '65% top', end: 'bottom top', scrub: true }
         }
       )
-
-      // Beat 7: Final hero hold — tiny drift & depth settle
+      // Zoom OUT as it descends
       gsap.fromTo(groupRef.current.position,
-        { x: -3.2, y: 0.2, z: 2.8 },
+        { z: 4.5 },
         {
-          x: -3.5, y: 0, z: 2.4,
-          ease: 'power1.out',
-          scrollTrigger: { trigger: '.scene-07', start: '65% top', end: 'bottom bottom', scrub: true }
+          z: 2,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: '65% top', end: 'bottom top', scrub: true }
         }
       )
 
-      // Scene 08: Infinite Frame (scales up massively)
-      gsap.to(groupRef.current.scale, {
-        x: 30, y: 30, z: 30,
-        ease: 'power4.in',
-        scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
-      })
+      // ── BEAT 4: SWEEP through Scene 07 → EXIT left ───────────────────────
+      // Continues the arc sweep leftward and off screen
+      // Uses toggleActions so it FREEZES at exit position and does NOT reverse back in
+      gsap.fromTo(groupRef.current.position,
+        { x: -3.5, y: -0.5, z: 2 },
+        {
+          x: -12, y: -2, z: 1,     // exits far left — completely off screen
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.rotation,
+        { y: Math.PI / 3 },
+        {
+          y: Math.PI / 2,           // faces further away as it exits
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
+
+      // ── BEAT 5: FULLY GONE by Scene 08 ───────────────────────────────────
+      // Camera is at x: -12, far off-screen. Scale it to invisible as insurance.
+      // This ensures zero model visibility during the Infinite Frame lens close-up.
+      gsap.fromTo(groupRef.current.scale,
+        { x: 3.2, y: 3.2, z: 3.2 },
+        {
+          x: 0.001, y: 0.001, z: 0.001,
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.scene-07', start: 'center center', end: 'bottom bottom', scrub: true }
+        }
+      )
     }
   }, { dependencies: [id] })
 
