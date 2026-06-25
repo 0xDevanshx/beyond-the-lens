@@ -13,8 +13,6 @@ export function CameraActor({ id, url }) {
   const { scene } = useGLTF(url)
   const groupRef = useRef()
   const originalY = useRef(0)
-  const burstDir = useRef(new THREE.Vector3())
-  const modernBreath = useRef({ intensity: 0 })
   const mouseTarget = useRef(new THREE.Vector2(0, 0))
 
   useEffect(() => {
@@ -50,25 +48,6 @@ export function CameraActor({ id, url }) {
       
       scene.rotation.x = -mouseTarget.current.y
       scene.rotation.y = mouseTarget.current.x
-    } else if (id === 'modern') {
-      // Character 03: Mouse parallax (3% influence) and conditional cinematic breathing
-      mouseTarget.current.x = THREE.MathUtils.lerp(mouseTarget.current.x, state.mouse.x * 0.03, 0.05)
-      mouseTarget.current.y = THREE.MathUtils.lerp(mouseTarget.current.y, state.mouse.y * 0.03, 0.05)
-
-      const time = state.clock.elapsedTime
-      const intensity = modernBreath.current.intensity
-
-      // Base micro-rotation (breathing) scaled by intensity
-      const breathX = Math.sin(time * 0.4) * 0.02 * intensity
-      const breathY = Math.cos(time * 0.3) * 0.02 * intensity
-      const breathZ = Math.sin(time * 0.5) * 0.01 * intensity
-
-      scene.rotation.x = breathX - mouseTarget.current.y
-      scene.rotation.y = breathY + mouseTarget.current.x
-      scene.rotation.z = breathZ
-
-      // Tiny positional drift
-      scene.position.y = Math.sin(time * 0.6) * 0.05 * intensity
     }
   })
 
@@ -226,115 +205,53 @@ export function CameraActor({ id, url }) {
         }, 0.2)
       })
 
-      // Fade out for Scene 06 (Early exit to create breathing room)
+      // Fade out for Scene 06
       gsap.fromTo(groupRef.current.scale, 
         { x: 1.5, y: 1.5, z: 1.5 },
         {
-          x: 0.001, y: 0.001, z: 0.001, 
+          x: 0.001, y: 0.001, z: 0.001, // F2: Avoid scale 0
           ease: 'power2.in',
-          scrollTrigger: { trigger: '.scene-05', start: '40% top', end: '80% top', scrub: true }
+          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
         }
       )
     } 
     else if (id === 'modern') {
       gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
+      // Clean vertical entrance — no z-fight from diagonal rise
+      gsap.set(groupRef.current.position, { y: -3, z: 0 })
       
-      // Scene 06: Swooping entrance arc and extended dwell
-      // Start deep and low
-      gsap.set(groupRef.current.position, { x: 0, y: -4, z: -3 })
-      gsap.set(groupRef.current.rotation, { y: Math.PI / 4 })
-
-      // Entrance arc (Scale + Pos + Rot)
-      // Enters ONLY after Vintage Camera has completely left the stage + a 30vh visual pause
-      gsap.fromTo(groupRef.current.position, 
-        { x: 0, y: -4, z: -3 },
-        {
-          x: 3, y: 0, z: 2.5,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.scale, 
-        { x: 0.001, y: 0.001, z: 0.001 },
-        {
-          x: 3.5, y: 3.5, z: 3.5,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation, 
-        { y: Math.PI / 4 },
-        {
-          y: -Math.PI / 6,
-          ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '70% top', scrub: true }
-        }
-      )
-
-      // Dwell phase: push in slightly while fading in breathing
-      gsap.fromTo(modernBreath.current,
-        { intensity: 0 },
-        {
-          intensity: 1,
-          ease: 'power1.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: '60% top', end: 'bottom bottom', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.position, 
-        { x: 3, y: 0, z: 2.5 },
-        {
-          x: 2.5, y: 0, z: 3.2, // slow push in and drift
-          ease: 'none',
-          scrollTrigger: { trigger: '.scene-06', start: '60% top', end: 'bottom bottom', scrub: true }
-        }
-      )
-
-      // Scene 07: Orbital sweep left (fade out breathing)
-      gsap.fromTo(modernBreath.current,
-        { intensity: 1 },
-        {
-          intensity: 0,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.position, 
-        { x: 2.5, y: 0, z: 3.2 },
-        {
-          x: -3.8, y: 0.5, z: 2, // Sweep to left, slight rise, pull back slightly
-          ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation, 
-        { y: -Math.PI / 6 },
-        {
-          y: -Math.PI / 2.5, // Look back toward center
-          ease: 'sine.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
-        }
-      )
+      // Scene 06: Modern Vision
+      gsap.to(groupRef.current.scale, {
+        x: 3, y: 3, z: 3,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+      })
+      gsap.to(groupRef.current.position, {
+        x: 3, y: 0, z: 2,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom bottom', scrub: true }
+      })
+      gsap.to(groupRef.current.rotation, {
+        y: -Math.PI / 4,
+        ease: 'none',
+        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom top', scrub: true }
+      })
       
+      // Scene 07: Move to left to clear space for text
+      gsap.fromTo(groupRef.current.position, 
+        { x: 3, y: 0, z: 2 },
+        {
+          x: -4,
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
       // Scene 08: Infinite Frame (scales up massively)
-      // Very subtle roll and pitch to avoid spinning sensation
-      gsap.fromTo(groupRef.current.scale, 
-        { x: 3.5, y: 3.5, z: 3.5 },
-        {
-          x: 30, y: 30, z: 30, 
-          ease: 'power4.in',
-          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation, 
-        { x: 0, y: -Math.PI / 2.5, z: 0 },
-        {
-          x: -0.05, // barely perceptible pitch
-          y: -Math.PI / 2.8, 
-          z: -0.05, // barely perceptible roll
-          ease: 'power2.in',
-          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
-        }
-      )
+      gsap.to(groupRef.current.scale, {
+        x: 30, y: 30, z: 30, // F5: Max scale 30 instead of 100 to save depth precision
+        ease: 'power4.in',
+        scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
+      })
     }
   }, { dependencies: [id] })
 
