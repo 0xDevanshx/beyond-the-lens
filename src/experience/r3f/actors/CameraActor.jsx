@@ -216,8 +216,8 @@ export function CameraActor({ id, url }) {
       )
     } 
     else if (id === 'modern') {
-      // Start completely off-screen to the right (reduced from 15)
-      gsap.set(groupRef.current.position, { x: 8, y: 0, z: -3 })
+      // Start completely off-screen to the right
+      gsap.set(groupRef.current.position, { x: 15, y: 0, z: -3 })
       gsap.set(groupRef.current.rotation, { x: Math.PI / 4, y: Math.PI, z: 0 })
       gsap.set(groupRef.current.scale, { x: 3, y: 3, z: 3 })
       
@@ -303,7 +303,7 @@ export function CameraActor({ id, url }) {
 
       // 5. Final Exit: Swoosh out of frame to the left and freeze
       .to(groupRef.current.position, {
-        x: -8, y: -2.5, z: -3,
+        x: -15, y: -2.5, z: -3,
         ease: 'power2.in',
         duration: 2
       })
@@ -313,7 +313,7 @@ export function CameraActor({ id, url }) {
         duration: 2
       }, '<')
 
-      // The camera is now off-screen at x: -8. 
+      // The camera is now off-screen at x: -15. 
       // It will remain frozen there during Scene 08 (Infinite Frame).
     }
   }, { dependencies: [id] })
