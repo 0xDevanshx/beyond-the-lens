@@ -24,36 +24,62 @@ export function KineticText({ children, tag = 'div', className = '', delay = 0, 
     // Initialize SplitType
     const split = new SplitType(textRef.current, { types: 'lines,words,chars' })
     
-    // Using fromTo guarantees deterministic start state and single ownership
-    // Using 'play reverse play reverse' restores the cinematic feel on scroll up/down
-    // willChange optimizes performance during the blur
-    gsap.fromTo(split.chars, 
-      { 
-        opacity: 0, 
-        filter: 'blur(8px)', 
-        scale: 1.1,
-        transformOrigin: 'center center'
-      },
-      {
-        opacity: 1,
-        filter: 'blur(0px)',
-        scale: 1,
-        duration: 1.4,
-        stagger: stagger,
-        ease: EASINGS.cinematicSmooth,
-        delay: delay,
-        willChange: 'transform, opacity, filter',
-        scrollTrigger: scrollTriggerTarget ? {
-          trigger: scrollTriggerTarget,
-          start: 'top 85%', // slightly lower so it's visible while animating
-          toggleActions: 'play reverse play reverse'
-        } : undefined,
-        onComplete: () => {
-          // Remove will-change after animation to free up GPU memory and prevent lag
-          gsap.set(split.chars, { clearProps: 'willChange' })
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+    if (isMobile) {
+      // Lightweight GPU-friendly animation on mobile (no expensive CSS filter/blur or scale)
+      gsap.fromTo(split.chars,
+        {
+          opacity: 0,
+          y: 8,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.0,
+          stagger: stagger,
+          ease: EASINGS.cinematicSmooth,
+          delay: delay,
+          willChange: 'transform, opacity',
+          scrollTrigger: scrollTriggerTarget ? {
+            trigger: scrollTriggerTarget,
+            start: 'top 90%',
+            toggleActions: 'play reverse play reverse'
+          } : undefined,
+          onComplete: () => {
+            gsap.set(split.chars, { clearProps: 'willChange' })
+          }
         }
-      }
-    )
+      )
+    } else {
+      // Full cinematic blur/scale on desktop
+      gsap.fromTo(split.chars, 
+        { 
+          opacity: 0, 
+          filter: 'blur(8px)', 
+          scale: 1.1,
+          transformOrigin: 'center center'
+        },
+        {
+          opacity: 1,
+          filter: 'blur(0px)',
+          scale: 1,
+          duration: 1.4,
+          stagger: stagger,
+          ease: EASINGS.cinematicSmooth,
+          delay: delay,
+          willChange: 'transform, opacity, filter',
+          scrollTrigger: scrollTriggerTarget ? {
+            trigger: scrollTriggerTarget,
+            start: 'top 85%',
+            toggleActions: 'play reverse play reverse'
+          } : undefined,
+          onComplete: () => {
+            gsap.set(split.chars, { clearProps: 'willChange' })
+          }
+        }
+      )
+    }
 
     return () => {
       split.revert()

@@ -11,7 +11,7 @@ export function ContentUniverse() {
   const groupRef = useRef()
   const meshRef = useRef()
   
-  const COUNT = 50
+  const COUNT = typeof window !== 'undefined' && window.innerWidth < 768 ? 25 : 50
 
   const dummy = useMemo(() => new THREE.Object3D(), [])
   

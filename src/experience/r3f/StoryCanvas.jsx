@@ -42,7 +42,7 @@ export function StoryCanvas() {
     <CanvasErrorBoundary>
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0, pointerEvents: 'none' }} role="img" aria-label="Interactive 3D evolution of the camera lens">
         <Canvas
-          dpr={Math.min(window.devicePixelRatio, 1.5)}
+          dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? 1.0 : Math.min(window.devicePixelRatio, 1.5)}
           gl={{ antialias: false, alpha: false, powerPreference: 'high-performance' }}
         >
           <StoryCamera />

@@ -6,7 +6,7 @@ import * as THREE from 'three'
 
 export function AmbientParticles() {
   const meshRef = useRef()
-  const COUNT = 300
+  const COUNT = typeof window !== 'undefined' && window.innerWidth < 768 ? 120 : 300
 
   // We store extra data in a Float32Array to manage particle velocities and states
   const particleData = useMemo(() => {
