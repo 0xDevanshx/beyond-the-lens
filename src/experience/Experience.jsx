@@ -10,7 +10,13 @@ import './dom/styles/global.css'
 
 export function Experience() {
   const [preloaderDone, setPreloaderDone] = useState(false)
+  const [domReady, setDomReady] = useState(false)
   const progressRef = useRef()
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDomReady(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -37,7 +43,7 @@ export function Experience() {
             <ChapterNav />
 
             {/* 3D WEBGL LAYER (Fixed behind DOM) */}
-            <StoryCanvas />
+            {domReady && <StoryCanvas />}
 
             {/* DOM LAYER (Scrollable) */}
             <NarrativeTrack />
