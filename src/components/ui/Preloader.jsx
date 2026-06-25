@@ -26,7 +26,7 @@ export function Preloader({ onComplete }) {
   }, [progress, hasTriggered, onComplete])
 
   return (
-    <div ref={ref} className="preloader" aria-hidden="true">
+    <div ref={ref} className="preloader" role="status" aria-live="polite" aria-label="Loading experience">
       <div className="preloader__aperture" />
       <div className="preloader__bar" style={{ position: 'relative', overflow: 'hidden' }}>
         <div style={{ width: `${progress}%`, height: '100%', background: 'white', transition: 'width 0.3s ease' }} />

@@ -52,6 +52,7 @@ export function ChapterNav() {
           data-label={chapter.label}
           onClick={() => scrollTo(i)}
           aria-label={`Go to ${chapter.label}`}
+          aria-current={i === active ? 'step' : undefined}
           style={{ cursor: 'pointer', pointerEvents: 'all' }}
         />
       ))}

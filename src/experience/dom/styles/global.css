@@ -378,3 +378,85 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.01ms !important;
   }
 }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─────────────────────────────────────────
+   ACCESSIBILITY & FOCUS STATES
+───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 4px;
+}
+
+/* Ensure button touch targets are at least 44x44px */
+.chapter-nav__dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+/* ─────────────────────────────────────────
+   MOBILE / RESPONSIVE OVERRIDES
+───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .scene {
+    padding: 0 5vw;
+  }
+  
+  /* Reduce minimum clamps for massive typography to prevent clipping */
+  .scene-01 h1 {
+    font-size: clamp(3rem, 12vw, 6rem);
+  }
+  .scene-02 h2 {
+    font-size: clamp(3rem, 14vw, 6rem);
+  }
+  .scene-03 h2 {
+    font-size: clamp(3rem, 15vw, 7rem);
+  }
+  .scene-04 h2 {
+    font-size: clamp(3rem, 15vw, 7rem);
+  }
+  .scene-05 h1 {
+    font-size: clamp(3rem, 16vw, 8rem);
+  }
+  .scene-06 h2 {
+    font-size: clamp(3rem, 16vw, 8rem);
+  }
+  .scene-07 h2 {
+    font-size: clamp(3rem, 15vw, 7rem);
+  }
+  .scene-08 h1 {
+    font-size: clamp(3rem, 16vw, 8rem);
+  }
+
+  /* Move chapter navigation to bottom horizontal bar so it doesn't overlap text */
+  .chapter-nav {
+    left: 50%;
+    top: auto;
+    bottom: 2rem;
+    transform: translateX(-50%);
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+  
+  /* Hide text labels on mobile to save space */
+  .chapter-nav__dot::before {
+    display: none;
+  }
+}
