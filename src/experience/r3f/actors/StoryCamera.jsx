@@ -27,7 +27,7 @@ export function StoryCamera() {
       {
         z: 3,
         ease: 'power1.inOut',
-        scrollTrigger: { trigger: '.scene-02', start: 'top bottom', end: 'center center', scrub: true }
+        scrollTrigger: { trigger: '.scene-02', start: 'top bottom', end: 'center center', scrub: 1 }
       }
     )
 
@@ -37,7 +37,7 @@ export function StoryCamera() {
       {
         x: 5, z: 5,
         ease: 'power2.inOut',
-        scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom bottom', scrub: true }
+        scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom bottom', scrub: 1 }
       }
     )
 
@@ -48,7 +48,7 @@ export function StoryCamera() {
       {
         x: 1, z: 6,
         ease: 'power1.inOut',
-        scrollTrigger: { trigger: '.scene-05', start: 'top bottom', end: 'bottom bottom', scrub: true }
+        scrollTrigger: { trigger: '.scene-05', start: 'top bottom', end: 'bottom bottom', scrub: 1 }
       }
     )
 
@@ -58,7 +58,7 @@ export function StoryCamera() {
       {
         x: 0, z: 4,
         ease: 'power3.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: 1 }
       }
     )
     

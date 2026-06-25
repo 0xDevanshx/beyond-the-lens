@@ -102,7 +102,26 @@ export function AmbientParticles() {
     <instancedMesh ref={meshRef} args={[null, null, COUNT]} renderOrder={0}>
       {/* Sphere geometry — no visible square edges at close range */}
       <sphereGeometry args={[0.03, 5, 5]} />
-      <meshBasicMaterial color="#ffffff" transparent opacity={0.6} depthWrite={false} />
+      <meshBasicMaterial 
+        color="#ffffff" 
+        transparent 
+        opacity={0.6} 
+        depthWrite={false} 
+        onBeforeCompile={(shader) => {
+          shader.vertexShader = shader.vertexShader.replace(
+            `#include <project_vertex>`,
+            `
+            #ifdef USE_INSTANCING
+              // Calculate the view-space center of this specific particle instance
+              vec4 instanceCenter = modelViewMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+              // Scale down the geometry (transformed) as it approaches the near plane
+              transformed *= smoothstep(0.2, 1.5, -instanceCenter.z);
+            #endif
+            #include <project_vertex>
+            `
+          );
+        }}
+      />
     </instancedMesh>
   )
 }
