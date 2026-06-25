@@ -217,94 +217,143 @@ export function CameraActor({ id, url }) {
     } 
     else if (id === 'modern') {
       gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
-      gsap.set(groupRef.current.position, { x: 0, y: -4, z: -3 })
-      gsap.set(groupRef.current.rotation, { y: Math.PI / 4 })
-      
-      // Scene 06: Modern Vision
-      // Enters ONLY after Vintage Camera has completely left the stage + a 30vh visual pause
-      gsap.to(groupRef.current.position, {
-        x: 2, y: 0, z: 2.5,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
-      })
-      gsap.to(groupRef.current.scale, {
-        x: 3.5, y: 3.5, z: 3.5,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
-      })
-      gsap.to(groupRef.current.rotation, {
-        y: -Math.PI / 6,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
-      })
+      gsap.set(groupRef.current.position, { x: 0, y: -3, z: 0 })
+      gsap.set(groupRef.current.rotation, { x: 0, y: 0, z: 0 })
 
-      // Hero Dwell 1: complete pause, then very slow depth push and drift
-      gsap.fromTo(groupRef.current.position, 
-        { x: 2, y: 0, z: 2.5 },
-        {
-          x: 1.8, y: 0, z: 2.8,
-          ease: 'power2.in', // Starts imperceptibly, accelerates slightly
-          scrollTrigger: { trigger: '.scene-06', start: '80% top', end: 'bottom bottom', scrub: true }
-        }
-      )
-      
-      // Scene 07: Orbital sweep left
-      gsap.fromTo(groupRef.current.position, 
-        { x: 1.8, y: 0, z: 2.8 },
-        {
-          x: -3.5, y: 0, z: 1.5,
-          ease: 'power2.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation, 
-        { y: -Math.PI / 6 },
-        {
-          y: -Math.PI / 4, 
-          ease: 'power2.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
-        }
-      )
-
-      // Hero Dwell 2: Scene 07 complete pause, then subtle drift
-      gsap.fromTo(groupRef.current.position, 
-        { x: -3.5, y: 0, z: 1.5 },
-        {
-          x: -3.8, y: 0, z: 1.8,
-          ease: 'power2.in',
-          scrollTrigger: { trigger: '.scene-07', start: '75% center', end: 'bottom bottom', scrub: true }
-        }
-      )
-      
-      // Scene 08: Infinite Frame (scales up massively)
-      // Re-center position first so the 30x scale doesn't push model off-screen
-      gsap.fromTo(groupRef.current.position,
-        { x: -3.8, y: 0, z: 1.8 },
-        {
-          x: 0, y: 0, z: 0,
-          ease: 'power2.in',
-          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'center center', scrub: true }
-        }
-      )
+      // ─── SCENE 06 ─── Modern Vision
+      // Beat 1: Rise up and scale in from below (enters after vintage is gone)
       gsap.fromTo(groupRef.current.scale,
-        { x: 3.5, y: 3.5, z: 3.5 },
+        { x: 0.001, y: 0.001, z: 0.001 },
         {
-          x: 30, y: 30, z: 30, 
-          ease: 'power4.in',
-          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
+          x: 3, y: 3, z: 3,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '20% top', scrub: true }
         }
       )
-      // Very subtle roll and pitch to avoid spinning sensation
-      gsap.fromTo(groupRef.current.rotation, 
-        { x: 0, y: -Math.PI / 4, z: 0 },
+      gsap.fromTo(groupRef.current.position,
+        { x: 0, y: -3, z: 0 },
         {
-          x: -0.05, 
-          y: -Math.PI / 4.2, 
-          z: -0.05,
-          ease: 'power2.in',
-          scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
+          x: 2, y: 0, z: 2,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '20% top', scrub: true }
         }
       )
+      gsap.fromTo(groupRef.current.rotation,
+        { y: 0 },
+        {
+          y: -Math.PI / 5,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '20% top', scrub: true }
+        }
+      )
+
+      // Beat 2: Arc left + zoom in (lens toward viewer)
+      gsap.fromTo(groupRef.current.position,
+        { x: 2, y: 0, z: 2 },
+        {
+          x: -1, y: 0.5, z: 3.5,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: '20% top', end: '45% top', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.rotation,
+        { y: -Math.PI / 5 },
+        {
+          y: Math.PI / 6,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: '20% top', end: '45% top', scrub: true }
+        }
+      )
+
+      // Beat 3: Swing right + pull back (reveal silhouette)
+      gsap.fromTo(groupRef.current.position,
+        { x: -1, y: 0.5, z: 3.5 },
+        {
+          x: 2.5, y: -0.3, z: 1.5,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: '45% top', end: '70% top', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.rotation,
+        { y: Math.PI / 6 },
+        {
+          y: -Math.PI / 3,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: '45% top', end: '70% top', scrub: true }
+        }
+      )
+
+      // Beat 4: Settle into right-of-center hero frame, push in gently
+      gsap.fromTo(groupRef.current.position,
+        { x: 2.5, y: -0.3, z: 1.5 },
+        {
+          x: 2.8, y: 0, z: 2.5,
+          ease: 'power1.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: '70% top', end: 'bottom bottom', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.rotation,
+        { y: -Math.PI / 3 },
+        {
+          y: -Math.PI / 4,
+          ease: 'power1.inOut',
+          scrollTrigger: { trigger: '.scene-06', start: '70% top', end: 'bottom bottom', scrub: true }
+        }
+      )
+
+      // ─── SCENE 07 ─── Impact
+      // Beat 5: Arc swing to the left (arc path — pull back, drift left, push in)
+      gsap.fromTo(groupRef.current.position,
+        { x: 2.8, y: 0, z: 2.5 },
+        {
+          x: -0.5, y: 0.4, z: 1.2,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: '35% top', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.rotation,
+        { y: -Math.PI / 4 },
+        {
+          y: Math.PI / 4,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: '35% top', scrub: true }
+        }
+      )
+
+      // Beat 6: Push back in, revolve further left
+      gsap.fromTo(groupRef.current.position,
+        { x: -0.5, y: 0.4, z: 1.2 },
+        {
+          x: -3.2, y: 0.2, z: 2.8,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-07', start: '35% top', end: '65% top', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.rotation,
+        { y: Math.PI / 4 },
+        {
+          y: -Math.PI / 2.5,
+          ease: 'sine.inOut',
+          scrollTrigger: { trigger: '.scene-07', start: '35% top', end: '65% top', scrub: true }
+        }
+      )
+
+      // Beat 7: Final hero hold — tiny drift & depth settle
+      gsap.fromTo(groupRef.current.position,
+        { x: -3.2, y: 0.2, z: 2.8 },
+        {
+          x: -3.5, y: 0, z: 2.4,
+          ease: 'power1.out',
+          scrollTrigger: { trigger: '.scene-07', start: '65% top', end: 'bottom bottom', scrub: true }
+        }
+      )
+
+      // Scene 08: Infinite Frame (scales up massively)
+      gsap.to(groupRef.current.scale, {
+        x: 30, y: 30, z: 30,
+        ease: 'power4.in',
+        scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
+      })
     }
   }, { dependencies: [id] })
 
