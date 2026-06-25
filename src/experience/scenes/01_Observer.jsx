@@ -15,6 +15,7 @@ export function Scene01() {
           tag="h1"
           scrollTriggerTarget=".scene-01"
           stagger={0.03}
+          style={{ whiteSpace: 'nowrap' }}
         >
           The<br />Observer
         </KineticText>

@@ -7,7 +7,7 @@ import { EASINGS } from '../../motion/easings'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export function KineticText({ children, tag = 'div', className = '', delay = 0, stagger = 0.02, scrollTriggerTarget }) {
+export function KineticText({ children, tag = 'div', className = '', delay = 0, stagger = 0.02, scrollTriggerTarget, ...props }) {
   const textRef = useRef()
   const Tag = tag
 
@@ -55,7 +55,7 @@ export function KineticText({ children, tag = 'div', className = '', delay = 0, 
 
   // Removed clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)' to prevent the blur effect from being visually clipped at the edges
   return (
-    <Tag ref={textRef} className={className}>
+    <Tag ref={textRef} className={className} {...props}>
       {children}
     </Tag>
   )
