@@ -55,6 +55,12 @@
       "skillPath": ".agents/skills/custom-cursor/SKILL.md",
       "computedHash": "540a7b6d27ca0aae925e83a902bf5cf88cbb449b3de2776261791b28678a0008"
     },
+    "debugging-wizard": {
+      "source": "Jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/debugging-wizard/SKILL.md",
+      "computedHash": "7c578adb7a39ff6c4018f87055e4191e965c5e440119116914efd86318646a69"
+    },
     "domain-driven-design": {
       "source": "wondelai/skills",
       "sourceType": "github",
@@ -127,6 +133,12 @@
       "skillPath": "skills/r3f-interaction/SKILL.md",
       "computedHash": "702bc09fc0c20a325b93bacd5fc1361eae04b46dcb90534c04bd3c87a5cf52d7"
     },
+    "react-expert": {
+      "source": "RightNow-AI/openfang",
+      "sourceType": "github",
+      "skillPath": "crates/openfang-skills/bundled/react-expert/SKILL.md",
+      "computedHash": "aaaf5da32463cd92898bd30a1816951c3a39560fbb8b54342e4d96822aee6e50"
+    },
     "react-three-fiber": {
       "source": "vercel-labs/json-render",
       "sourceType": "github",
@@ -168,6 +180,12 @@
       "sourceType": "github",
       "skillPath": "skills/react-best-practices/SKILL.md",
       "computedHash": "ca7b0c0c6e5f2750043f7f0cd72d16ac4e2abc48f9b5500d047a4b77a2506212"
+    },
+    "verification-before-completion": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/verification-before-completion/SKILL.md",
+      "computedHash": "9b446f0c7fe1cfb560b1d34439523b1a76d5f177290007b2c053a1c749a4a8ba"
     },
     "working-with-legacy-code": {
       "source": "wondelai/skills",

@@ -74,11 +74,14 @@ export function ContentUniverse() {
     })
     
     // Scene 08: The Infinite Frame (Collapse into black hole effect)
-    gsap.to(groupRef.current.scale, {
-      x: 0, y: 0, z: 0,
-      ease: 'power4.in',
-      scrollTrigger: { trigger: '.scene-08', start: 'top bottom', end: 'center center', scrub: true }
-    })
+    gsap.fromTo(groupRef.current.scale, 
+      { x: 1, y: 1, z: 1 },
+      {
+        x: 0, y: 0, z: 0,
+        ease: 'power4.in',
+        scrollTrigger: { trigger: '.scene-08', start: 'top bottom', end: 'center center', scrub: true }
+      }
+    )
 
   })
 

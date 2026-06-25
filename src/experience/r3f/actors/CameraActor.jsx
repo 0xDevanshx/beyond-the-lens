@@ -16,16 +16,18 @@ export function CameraActor({ id, url }) {
   const mouseTarget = useRef(new THREE.Vector2(0, 0))
 
   useEffect(() => {
-    // F9: GLTF transparency sort fix — traverse meshes, fix transparent depthWrite and assign renderOrder
     if (scene) {
       scene.traverse(child => {
-        if (child.isMesh && child.material) {
-          if (child.material.transparent) {
-            child.material.depthWrite = false
-            child.renderOrder = 1 // Draw after particles (0) and atmosphere (-1)
-          } else {
-            child.material.depthWrite = true
-            child.renderOrder = 1
+        if (child.isMesh) {
+          child.frustumCulled = false // F9.5: Prevent meshes from disappearing when parent group moves/scales
+          if (child.material) {
+            if (child.material.transparent) {
+              child.material.depthWrite = false
+              child.renderOrder = 1 // Draw after particles (0) and atmosphere (-1)
+            } else {
+              child.material.depthWrite = true
+              child.renderOrder = 1
+            }
           }
         }
       })
@@ -74,7 +76,7 @@ export function CameraActor({ id, url }) {
       gsap.to(groupRef.current.position, {
         x: -1.5, z: 1,
         ease: 'none',
-        scrollTrigger: { trigger: '.scene-02', start: 'top bottom', end: 'bottom top', scrub: true }
+        scrollTrigger: { trigger: '.scene-02', start: 'top bottom', end: 'bottom bottom', scrub: true }
       })
       // Tween originalY.current so the breathing sine-wave centres at the correct height
       gsap.to(originalY, {
@@ -95,11 +97,15 @@ export function CameraActor({ id, url }) {
         scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'center center', scrub: true }
       })
       // Z-recession: camera drifts into darkness as it fades — not just scales away
-      gsap.to(groupRef.current.position, {
-        z: -5,
-        ease: 'power2.in',
-        scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'center center', scrub: true }
-      })
+      // Used fromTo to prevent reading initial state at page load which was -5
+      gsap.fromTo(groupRef.current.position, 
+        { z: 1 },
+        {
+          z: -5,
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
     } 
     else if (id === 'vintage') {
       gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
@@ -121,22 +127,28 @@ export function CameraActor({ id, url }) {
       gsap.to(groupRef.current.position, {
         x: 1.5, y: 0, z: 0,  // Right-of-center hero position — was x:0 (dead center)
         ease: 'power1.out',
-        scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'bottom top', scrub: true }
+        scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'top top', scrub: true }
       })
       
       // Scene 04: Frame Factory — cross-frame sweep from right (x:1.5) to left (x:-2)
-      gsap.to(groupRef.current.position, {
-        x: -2,      // was -1 — stronger left composition, clearer separation from text
-        y: 0,
-        z: -1,
-        ease: 'power2.inOut',
-        scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
-      })
-      gsap.to(groupRef.current.scale, {
-        x: 1.5, y: 1.5, z: 1.5, // Scale down to make room for the explosion
-        ease: 'power2.inOut',
-        scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
-      })
+      gsap.fromTo(groupRef.current.position, 
+        { x: 1.5, y: 0, z: 0 },
+        {
+          x: -2,      // was -1 — stronger left composition, clearer separation from text
+          y: 0,
+          z: -1,
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
+        }
+      )
+      gsap.fromTo(groupRef.current.scale, 
+        { x: 1.8, y: 1.8, z: 1.8 },
+        {
+          x: 1.5, y: 1.5, z: 1.5, // Scale down to make room for the explosion
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom top', scrub: true }
+        }
+      )
       gsap.to(groupRef.current.rotation, {
         y: Math.PI * 1.5, // F8: 270 sweep, removed x rotation to prevent gimbal lock
         ease: 'none',
@@ -148,13 +160,16 @@ export function CameraActor({ id, url }) {
         const dir = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(3.0) // Increase explosion radius
         
         // Exploded view
-        gsap.to(mesh.position, {
-          x: mesh.userData.origPos.x + dir.x,
-          y: mesh.userData.origPos.y + dir.y,
-          z: mesh.userData.origPos.z + dir.z,
-          ease: 'power2.inOut',
-          scrollTrigger: { trigger: '.scene-04', start: 'top center', end: 'bottom top', scrub: true }
-        })
+        gsap.fromTo(mesh.position, 
+          { x: mesh.userData.origPos.x, y: mesh.userData.origPos.y, z: mesh.userData.origPos.z },
+          {
+            x: mesh.userData.origPos.x + dir.x,
+            y: mesh.userData.origPos.y + dir.y,
+            z: mesh.userData.origPos.z + dir.z,
+            ease: 'power2.inOut',
+            scrollTrigger: { trigger: '.scene-04', start: 'top bottom', end: 'bottom bottom', scrub: true }
+          }
+        )
       })
 
       // Scene 05: Kinetic Burst — one-shot, no reverse
@@ -191,11 +206,14 @@ export function CameraActor({ id, url }) {
       })
 
       // Fade out for Scene 06
-      gsap.to(groupRef.current.scale, {
-        x: 0.001, y: 0.001, z: 0.001, // F2: Avoid scale 0
-        ease: 'power2.in',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
-      })
+      gsap.fromTo(groupRef.current.scale, 
+        { x: 1.5, y: 1.5, z: 1.5 },
+        {
+          x: 0.001, y: 0.001, z: 0.001, // F2: Avoid scale 0
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
     } 
     else if (id === 'modern') {
       gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
@@ -211,7 +229,7 @@ export function CameraActor({ id, url }) {
       gsap.to(groupRef.current.position, {
         x: 3, y: 0, z: 2,
         ease: 'power2.out',
-        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom top', scrub: true }
+        scrollTrigger: { trigger: '.scene-06', start: 'top bottom', end: 'bottom bottom', scrub: true }
       })
       gsap.to(groupRef.current.rotation, {
         y: -Math.PI / 4,
@@ -220,11 +238,14 @@ export function CameraActor({ id, url }) {
       })
       
       // Scene 07: Move to left to clear space for text
-      gsap.to(groupRef.current.position, {
-        x: -4,
-        ease: 'power2.inOut',
-        scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
-      })
+      gsap.fromTo(groupRef.current.position, 
+        { x: 3, y: 0, z: 2 },
+        {
+          x: -4,
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
+        }
+      )
       // Scene 08: Infinite Frame (scales up massively)
       gsap.to(groupRef.current.scale, {
         x: 30, y: 30, z: 30, // F5: Max scale 30 instead of 100 to save depth precision
