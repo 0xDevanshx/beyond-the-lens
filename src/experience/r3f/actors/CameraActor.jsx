@@ -13,8 +13,6 @@ export function CameraActor({ id, url }) {
   const { scene } = useGLTF(url)
   const groupRef = useRef()
   const originalY = useRef(0)
-  const burstDir = useRef(new THREE.Vector3())
-  const modernParallax = useRef({ intensity: 0 })
   const mouseTarget = useRef(new THREE.Vector2(0, 0))
 
   useEffect(() => {
@@ -50,26 +48,6 @@ export function CameraActor({ id, url }) {
       
       scene.rotation.x = -mouseTarget.current.y
       scene.rotation.y = mouseTarget.current.x
-    } else if (id === 'modern') {
-      const intensity = modernParallax.current.intensity
-
-      if (intensity > 0.01) {
-        // Character 03: Mouse parallax (2% influence) enabled only during Hero Dwell
-        mouseTarget.current.x = THREE.MathUtils.lerp(mouseTarget.current.x, state.mouse.x * 0.02, 0.05)
-        mouseTarget.current.y = THREE.MathUtils.lerp(mouseTarget.current.y, state.mouse.y * 0.02, 0.05)
-
-        // Subtle time-based drift to prevent static feel even if mouse is still
-        const time = state.clock.elapsedTime
-        const driftX = Math.sin(time * 0.4) * 0.01 * intensity
-        const driftY = Math.cos(time * 0.3) * 0.01 * intensity
-
-        scene.rotation.x = (-mouseTarget.current.y + driftX)
-        scene.rotation.y = (mouseTarget.current.x + driftY)
-      } else {
-        // Reset rotation nicely if moving
-        scene.rotation.x = THREE.MathUtils.lerp(scene.rotation.x, 0, 0.05)
-        scene.rotation.y = THREE.MathUtils.lerp(scene.rotation.y, 0, 0.05)
-      }
     }
   })
 
@@ -239,84 +217,48 @@ export function CameraActor({ id, url }) {
     } 
     else if (id === 'modern') {
       gsap.set(groupRef.current.scale, { x: 0.001, y: 0.001, z: 0.001 })
+      gsap.set(groupRef.current.position, { x: 0, y: -4, z: -3 })
+      gsap.set(groupRef.current.rotation, { y: Math.PI / 4 })
       
-      // Scene 06: The Reveal Arc
-      gsap.set(groupRef.current.position, { x: 0, y: -4, z: -2 })
-      gsap.set(groupRef.current.rotation, { x: -0.1, y: Math.PI / 4, z: 0 })
+      // Scene 06: Modern Vision
+      // Enters ONLY after Vintage Camera has completely left the stage + a 30vh visual pause
+      gsap.to(groupRef.current.position, {
+        x: 2, y: 0, z: 2.5,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
+      })
+      gsap.to(groupRef.current.scale, {
+        x: 3.5, y: 3.5, z: 3.5,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
+      })
+      gsap.to(groupRef.current.rotation, {
+        y: -Math.PI / 6,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.scene-06', start: 'top top', end: '60% top', scrub: true }
+      })
 
-      // Phase 1: Entrance Move (top top to center center)
-      gsap.fromTo(groupRef.current.position, 
-        { x: 0, y: -4, z: -2 },
-        {
-          x: 2, y: 0, z: 2.5,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: 'center center', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.scale, 
-        { x: 0.001, y: 0.001, z: 0.001 },
-        {
-          x: 3.5, y: 3.5, z: 3.5,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: 'center center', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation, 
-        { x: -0.1, y: Math.PI / 4, z: 0 },
-        {
-          x: 0, y: -Math.PI / 6, z: 0, // Arrives confidently
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-06', start: 'top top', end: 'center center', scrub: true }
-        }
-      )
-
-      // Phase 2: Hero Hold 1 (center center to bottom top)
-      gsap.fromTo(modernParallax.current,
-        { intensity: 0 },
-        {
-          intensity: 1,
-          ease: 'power1.inOut',
-          scrollTrigger: { trigger: '.scene-06', start: 'center center', end: 'bottom top', scrub: true }
-        }
-      )
+      // Hero Dwell 1: complete pause, then very slow depth push and drift
       gsap.fromTo(groupRef.current.position, 
         { x: 2, y: 0, z: 2.5 },
         {
-          x: 1.9, y: 0, z: 2.7, // Micro depth push and tiny drift
-          ease: 'none',
-          scrollTrigger: { trigger: '.scene-06', start: 'center center', end: 'bottom top', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation,
-        { x: 0, y: -Math.PI / 6, z: 0 },
-        {
-          x: 0, y: -Math.PI / 6.2, z: 0, // Extremely subtle yaw breath
-          ease: 'none',
-          scrollTrigger: { trigger: '.scene-06', start: 'center center', end: 'bottom top', scrub: true }
-        }
-      )
-
-      // Scene 07: The Orbital Pan
-      gsap.fromTo(modernParallax.current,
-        { intensity: 1 },
-        {
-          intensity: 0,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: '30% center', scrub: true }
+          x: 1.8, y: 0, z: 2.8,
+          ease: 'power2.in', // Starts imperceptibly, accelerates slightly
+          scrollTrigger: { trigger: '.scene-06', start: '80% top', end: 'bottom bottom', scrub: true }
         }
       )
       
-      // Phase 1: Shallow curved sweep
+      // Scene 07: Orbital sweep left
       gsap.fromTo(groupRef.current.position, 
-        { x: 1.9, y: 0, z: 2.7 },
+        { x: 1.8, y: 0, z: 2.8 },
         {
-          x: -3.5, y: 0.5, z: 1.5, // Pulls back slightly during the cross
+          x: -3.5, y: 0, z: 1.5,
           ease: 'power2.inOut',
           scrollTrigger: { trigger: '.scene-07', start: 'top bottom', end: 'center center', scrub: true }
         }
       )
       gsap.fromTo(groupRef.current.rotation, 
-        { y: -Math.PI / 6.2 },
+        { y: -Math.PI / 6 },
         {
           y: -Math.PI / 4, 
           ease: 'power2.inOut',
@@ -324,44 +266,30 @@ export function CameraActor({ id, url }) {
         }
       )
 
-      // Phase 2: Hero Hold 2
-      gsap.fromTo(modernParallax.current,
-        { intensity: 0 },
-        {
-          intensity: 1,
-          ease: 'power1.inOut',
-          scrollTrigger: { trigger: '.scene-07', start: 'center center', end: 'bottom bottom', scrub: true }
-        }
-      )
+      // Hero Dwell 2: Scene 07 complete pause, then subtle drift
       gsap.fromTo(groupRef.current.position, 
-        { x: -3.5, y: 0.5, z: 1.5 },
+        { x: -3.5, y: 0, z: 1.5 },
         {
-          x: -3.6, y: 0.5, z: 1.7, // Slow drift and slight push-in
-          ease: 'none',
-          scrollTrigger: { trigger: '.scene-07', start: 'center center', end: 'bottom bottom', scrub: true }
-        }
-      )
-      gsap.fromTo(groupRef.current.rotation,
-        { y: -Math.PI / 4 },
-        {
-          y: -Math.PI / 4.2, // Extremely subtle yaw breath
-          ease: 'none',
-          scrollTrigger: { trigger: '.scene-07', start: 'center center', end: 'bottom bottom', scrub: true }
+          x: -3.8, y: 0, z: 1.8,
+          ease: 'power2.in',
+          scrollTrigger: { trigger: '.scene-07', start: '75% center', end: 'bottom bottom', scrub: true }
         }
       )
       
       // Scene 08: Infinite Frame (scales up massively)
-      // Parallax fades out immediately
-      gsap.to(modernParallax.current, {
-        intensity: 0,
-        ease: 'power4.out',
-        scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'center center', scrub: true }
+      gsap.to(groupRef.current.scale, {
+        x: 30, y: 30, z: 30, 
+        ease: 'power4.in',
+        scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
       })
-      gsap.fromTo(groupRef.current.scale, 
-        { x: 3.5, y: 3.5, z: 3.5 },
+      // Very subtle roll and pitch to avoid spinning sensation
+      gsap.fromTo(groupRef.current.rotation, 
+        { x: 0, y: -Math.PI / 4, z: 0 },
         {
-          x: 30, y: 30, z: 30, // F5: Max scale 30 instead of 100 to save depth precision
-          ease: 'power4.in',
+          x: -0.05, 
+          y: -Math.PI / 4.2, 
+          z: -0.05,
+          ease: 'power2.in',
           scrollTrigger: { trigger: '.scene-08', start: 'top center', end: 'bottom bottom', scrub: true }
         }
       )
