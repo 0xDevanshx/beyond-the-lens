@@ -93,8 +93,8 @@ export function CameraActor({ id, url }) {
       // Scene 03: Optical Dissolve — scale AND z-recession together
       gsap.to(groupRef.current.scale, {
         x: 0.001, y: 0.001, z: 0.001,
-        ease: 'power2.in',
-        scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'center center', scrub: true }
+        ease: 'power1.inOut',
+        scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'bottom top', scrub: true }
       })
       // Z-recession: camera drifts into darkness as it fades — not just scales away
       // Used fromTo to prevent reading initial state at page load which was -5
@@ -102,8 +102,8 @@ export function CameraActor({ id, url }) {
         { z: 1 },
         {
           z: -5,
-          ease: 'power2.in',
-          scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'center center', scrub: true }
+          ease: 'power1.inOut',
+          scrollTrigger: { trigger: '.scene-03', start: 'top bottom', end: 'bottom top', scrub: true }
         }
       )
     } 
