@@ -63,16 +63,7 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   overflow: hidden;
 }
-.preloader__bar::after {
-  content: '';
-  position: absolute;
-  left: -100%;
-  top: 0; bottom: 0;
-  width: 100%;
-  background: white;
-  animation: bar-fill 2s ease-in-out forwards;
-}
-@keyframes bar-fill { to { left: 0; } }
+
 
 /* ─────────────────────────────────────────
    CHAPTER NAVIGATION (left side)
